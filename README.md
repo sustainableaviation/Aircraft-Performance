@@ -1,11 +1,10 @@
 # Aircraft Performance Code Documentation
-## Repository Structure
-All the relevant code is in the test_env folder. 
-### Database Creation
-The folder database_creation contains all the files executed by the master.py. Further, the folder rawdata contains all Input Data and in the 
+## Repository Structure 
+## Database
+The folder database_creation contains all the files executed by the main.py. Further, the folder rawdata contains all Input Data and in the 
 folder "graphs", all created figures will be saved.
 
-### master.py 
+### main.py 
 This is the main file, which executes the modelling pipeline. The Output Folder for all Graphs and all constants can be specified here. It will create a new output folder for the graphs for each day a simulation is carried out in order to not overwrite the existing ones. 
 You can choose the Mach number and the Altitude for which the analysis should be carried out. 
 As an output the Excel File Databank.xlsx will be produced.
@@ -32,12 +31,15 @@ As an output the Excel File Databank.xlsx will be produced.
 * 
 ### Tools
 The tools folder contains some additionally helpful files, such as plotting properties or dictionaries to match the aircraft names from the different sources.
+## Dashboard
+All the input files and the main file to generate the dashboard are locate din this folder
+
 
 ## Quickstart
 ### Setup Repository
 1. Clone this repository
 ```bash
-git clone https://github.com/rohrerph/Master_Thesis_Codes.git
+git clone https://github.com/sustainableaviation/Aircraft-Performance.git
 ```
 2. Install all needed Packages
 3. Head over to the test_env.master.py File and execute the simulation
