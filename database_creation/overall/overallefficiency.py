@@ -55,23 +55,27 @@ def calculate(savefig, km, mj, folder_path):
 
        # Remove Embraer 135 as value can't be true.
        airplanes_release_year = airplanes_release_year.loc[airplanes_release_year['Description'] != 'Embraer-135']
-       # Divide between Regional Aircraft and the Rest.
-       regionalcarriers = ['Canadair CRJ 900','Canadair RJ-200ER /RJ-440', 'Canadair RJ-700','Embraer 190'
-                           'Embraer ERJ-175', 'Embraer-135','Embraer-145']
-       regional = airplanes_release_year.loc[airplanes_release_year['Description'].isin(regionalcarriers)]
-       normal = airplanes_release_year.loc[~airplanes_release_year['Description'].isin(regionalcarriers)]
 
        # Get MJ/ASK value for the A380
        boeing747 = airplanes_release_year.loc[airplanes_release_year['Description']=='Boeing 747-400', 'MJ/ASK'].iloc[0]
        a380 = {'Description': 'A380', 'MJ/ASK': 0.88*boeing747}
        airplanes_release_year = airplanes_release_year.append(a380, ignore_index=True)
+       airplanes_release_year.to_excel(
+              r'C:\Users\PRohr\Desktop\Masterarbeit\Python\test_env\dashboard_creation\aircraft.xlsx')
 
+       # Divide between Regional Aircraft and the Rest.
+       regionalcarriers = ['Canadair CRJ 900','Canadair RJ-200ER /RJ-440', 'Canadair RJ-700','Embraer 190'
+                           'Embraer ERJ-175', 'Embraer-135','Embraer-145']
+       regional = airplanes_release_year.loc[airplanes_release_year['Description'].isin(regionalcarriers)]
+       normal = airplanes_release_year.loc[~airplanes_release_year['Description'].isin(regionalcarriers)]
        # Get MJ/ASK value for the Comet 4
        boeing707 = lee.loc[lee['Label']=='B707-100B/300', 'EU (MJ/ASK)'].iloc[0]
        comet4 = {'Label': 'Comet 4', 'EU (MJ/ASK)': boeing707/0.88, 'Year':1958}
        comet1 = {'Label': 'Comet 1', 'EU (MJ/ASK)': 2.499*comet4['EU (MJ/ASK)'], 'Year': 1952}
        lee = lee.append(comet4, ignore_index=True)
        lee = lee.append(comet1, ignore_index=True)
+       lee.to_excel(
+              r'C:\Users\PRohr\Desktop\Masterarbeit\Python\test_env\dashboard_creation\aircraft_lee.xlsx')
 
        # Plot Comet 4 Separately
        comet4 = lee.loc[lee['Label']=='Comet 4']
@@ -92,8 +96,8 @@ def calculate(savefig, km, mj, folder_path):
        ax.plot(lee_fleet['Year'], lee_fleet['EU (MJ/ASK)'],color='red', label='Lee Fleet')
 
        ax.legend()
-       #future_legend = ax.legend(loc='upper left', bbox_to_anchor=(1, 1), title="Historic Data", frameon=False)
-       #future_legend._legend_box.align = "left"
+       future_legend = ax.legend(loc='upper left', bbox_to_anchor=(1, 1), title="Historic Data", frameon=False)
+       future_legend._legend_box.align = "left"
 
        #Add projections from Lee et al.
        plot_past_projections = False
@@ -119,7 +123,7 @@ def calculate(savefig, km, mj, folder_path):
               ax.scatter(2035,0.381840741, marker='o', color='black', label='Double Bubble')
               ax.scatter(2040,0.82264895, marker='P', color='black', label='Advanced TW')
               ax.scatter(2040,0.797082164, marker='*', color='black', label='BWB')
-              ax.scatter(2050,0.814943788, marker='^', color='black', label='TW Limit')
+              ax.scatter(2050,0.618628347, marker='^', color='black', label='TW Limit')
 
               # Projection legend
               projection_handles = ax.get_legend_handles_labels()[0][8:]  # Exclude the first 8 handles (historic data)

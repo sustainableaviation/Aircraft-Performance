@@ -15,7 +15,7 @@ async function startApplication() {
   self.pyodide.globals.set("sendPatch", sendPatch);
   console.log("Loaded!");
   await self.pyodide.loadPackage("micropip");
-  const env_spec = ['https://cdn.holoviz.org/panel/1.0.2/dist/wheels/bokeh-3.1.1-py3-none-any.whl', 'https://cdn.holoviz.org/panel/1.0.2/dist/wheels/panel-1.0.2-py3-none-any.whl', 'pyodide-http==0.2.1', 'numpy', 'pandas']
+  const env_spec = ['https://cdn.holoviz.org/panel/1.0.2/dist/wheels/bokeh-3.1.1-py3-none-any.whl', 'https://cdn.holoviz.org/panel/1.0.2/dist/wheels/panel-1.0.2-py3-none-any.whl', 'pyodide-http==0.2.1', 'PIL', 'numpy', 'pandas', 'requests']
   for (const pkg of env_spec) {
     let pkg_name;
     if (pkg.endsWith('.whl')) {
@@ -50,7 +50,7 @@ init_doc()
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[19]:
+# In[141]:
 
 
 import panel as pn
@@ -69,6 +69,9 @@ from bokeh.palettes import Blues
 from bokeh.layouts import column
 from bokeh.layouts import row
 import warnings 
+import requests
+from io import BytesIO
+from PIL import Image
 warnings.filterwarnings("ignore")
 
 pn.extension(design='material')
@@ -76,42 +79,50 @@ pn.extension(design='material')
 
 # # Authors
 
-# In[20]:
+# In[142]:
 
 
 def about_authors(): 
-    
+    philipp = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/Philipp.JPG'
+    pic1 = pn.pane.JPG(philipp, width=150, height=200)
     text1 = """
     The best student 
     
-    Education: 
+    Philipp is enrolled as a Masters Student in the Department of Mechanical and Process Engineering of ETH Zurich. This Dashboard was created as part of his Masters Thesis under the supervision of Michael Weinold and Prof. Russell McKenna. 
     
-    Github: 
+    Education: 
+    - Master: Mech. Engineering, ETH Zurich, 2021-2023
+    - Bachelor: Mech. Engineering, ETH Zurich, 2018-2021
     
     """
-    
+    michael = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/michael.png'
+    pic2 = pn.pane.PNG(michael, width=150, height=200)
     text2 = """
     The best supervisor 
     
-    Education: 
+    Michael is a doctoral researcher in the Group for Technology Assessment under the supervision of Dr. Chris Mutel and Dr. Romain Sacchi at the Paul Scherrer Institute and Prof. Russell McKenna in the Department of Mechanical and Process Engineering of ETH Zurich.
     
-    Github:
-
+    Education: 
+    - PhD: Life-Cycle Assessment for Sustainable Aviation, PSI/ETH Zürich, 2022-ongoing
+    - Master: Physics, ETH Zurich, 2018-2020
+    - Bachelor: Engineering Physics, TU Vienna, 2014-2018
+    
     """
 
-    philipp = pn.Column('# Philipp Rohrer', pn.layout.Divider(), text1,  width=400,)
-    michael = pn.Column('# Michael Weinold', pn.layout.Divider(), text2,  width=400,)
+    philipp = pn.Column('# Philipp Rohrer', pn.layout.Divider(sizing_mode='stretch_width'), pic1, text1,  width=400,)
+    michael = pn.Column('# Michael Weinold', pn.layout.Divider(sizing_mode='stretch_width'),pic2, text2,  width=400,)
     dashboard = pn.Row(philipp, michael)
     return dashboard
 
 
 # # Data
 
-# In[21]:
+# In[143]:
 
 
 def data(): 
-    data = pd.read_excel(r'Databank.xlsx')
+    databank = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/Databank.xlsx'
+    databank = pd.read_excel(databank, engine='openpyxl')
     text = """
     In the following Table the values for each sub-efficiency (Overall, Engine, Aerodynamic, Structural) for the 72 
     investigated aircraft will be shown. For some aircraft, not all sub-efficiencies could have been determined. 
@@ -123,7 +134,7 @@ def data():
     - Structural Efficiency was calculated using Data from <a href="https://www.easa.europa.eu/en/document-library/type-certificates">Type Certificate Data Sheets</a> and <a href="https://shop.janes.com/all-the-world-s-aircraft-unmanned-23-24-yearbook-6541-3000230012">Jane's All the World's Aircraft</a>. 
     """
     
-    data = data[['Company', 'Name', 'YOI','EU (MJ/ASK)', 'TSFC Cruise',  'L/D estimate','OEW/Exit Limit']]
+    data = databank[['Company', 'Name', 'YOI','EU (MJ/ASK)', 'TSFC Cruise',  'L/D estimate','OEW/Exit Limit']]
     data.set_index('YOI', inplace=True)
     columns_to_round = ['EU (MJ/ASK)', 'TSFC Cruise', 'L/D estimate', 'OEW/Exit Limit']
     data[columns_to_round] = data[columns_to_round].apply(pd.to_numeric)
@@ -144,26 +155,45 @@ def data():
 
 # # Future
 
-# In[22]:
+# In[148]:
 
 
 def create_db1(): 
-    line = pn.layout.Divider(width=800)
+    def read_excel_from_github(url):
+        response = requests.get(url)
+        if response.status_code == 200:
+            return pd.read_excel(BytesIO(response.content))
+    
+    line = pn.layout.Divider(sizing_mode='stretch_width')
     text = """
     <div style="max-width: 600px">
-     In the following Dashboard Efficiency Improvements  
-     
-     A Seat Load Factor and the Annual Growth rate can be changed. 
-     </div>
+    The Dashboard displays future trajectories for efficiency improvements, specifically focusing on various design concepts. These concepts' efficiency improvements are assessed based on customizable parameters: seat load factor, air traffic management enhancements, and the annual growth rate for passenger air transport.
+
+    Once a scenario is chosen, the Dashboard will calculate the corresponding CO2 emissions and compare them to the CO2 reduction targets set by IATA, ICAO, and Eurocontrol. This comparison will help gauge the effectiveness of the efficiency improvements in meeting the industry's environmental goals.
+    
+    - EC Target: 75% Reduction in Net CO2 Emissions until 2050 (Baseline 2011)
+    - IATA Target: 50% Reduction in Net CO2 Emissions until 2050 (Baseline 2005)
+    - ICAO Target: 60% Reduction in CO2/RPK until 2050 (Baseline 2005)
+    
+    </div>
     """
     
-    freeze = pd.read_excel(r'techfreeze.xlsx')
-    limit = pd.read_excel(r'techlimit.xlsx')
-    bwb = pd.read_excel(r'bwb.xlsx')
-    advancedtw = pd.read_excel(r'advancedtw.xlsx')
-    doublebubble = pd.read_excel(r'doublebubble.xlsx')
-    ttbw = pd.read_excel(r'ttwb.xlsx')
-    target = pd.read_excel(r'target.xlsx')
+    #Load Files from Github. 
+    
+    freeze = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/techfreeze.xlsx'
+    freeze = read_excel_from_github(freeze)
+    limit = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/techlimit.xlsx'
+    limit = read_excel_from_github(limit)
+    bwb = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/bwb.xlsx'
+    bwb = read_excel_from_github(bwb)
+    advancedtw = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/advancedtw.xlsx'
+    advancedtw = read_excel_from_github(advancedtw)
+    doublebubble = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/doublebubble.xlsx'
+    doublebubble = read_excel_from_github(doublebubble)
+    ttbw = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/ttwb.xlsx'
+    ttbw = read_excel_from_github(ttbw)
+    target = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/target.xlsx'
+    target = read_excel_from_github(target)
 
     # Define the initial growth rate and limits
     initial_growth_rate = 2
@@ -228,37 +258,37 @@ def create_db1():
             freeze = freeze.merge(target[['Year', 'Billion RPK']], on='Year')
             freeze['EI CO2'] = freeze.apply(lambda row: row['Billion RPK'] * row['EI (CO2/RPK)'], axis=1)
             freeze = freeze[freeze['EI CO2'].notna()]
-            p.line(freeze['Year'], freeze['EI CO2'], line_color='blue', legend_label='Tech Freeze', line_width=3, line_dash='dashed')
+            p.line(freeze['Year'], freeze['EI CO2'], line_color='blue', legend_label='Tech Freeze', line_width=3)
         if 'TW Limit' in selected_tech:
             limit = scale_plf(limit, slf, atm)
             limit = limit.merge(target[['Year', 'Billion RPK']], on='Year')
             limit['EI CO2'] = limit.apply(lambda row: row['Billion RPK'] * row['EI (CO2/RPK)'], axis=1)
             limit = limit[limit['EI CO2'].notna()]
-            p.line(limit['Year'], limit['EI CO2'], line_color='blue', legend_label='TW Limit', line_width=3, line_dash='dotted')
+            p.line(limit['Year'], limit['EI CO2'], line_color='blue', legend_label='TW Limit', line_width=3)
         if 'BWB' in selected_tech:
             bwb = scale_plf(bwb, slf, atm)
             bwb = bwb.merge(target[['Year', 'Billion RPK']], on='Year')
             bwb['EI CO2'] = bwb.apply(lambda row: row['Billion RPK'] * row['EI (CO2/RPK)'], axis=1)
             bwb = bwb[bwb['EI CO2'].notna()]
-            p.line(bwb['Year'], bwb['EI CO2'], line_color='blue', legend_label='BWB', line_width=3, line_dash='dotdash')
+            p.line(bwb['Year'], bwb['EI CO2'], line_color='blue', legend_label='BWB', line_width=3)
         if 'Advanced TW' in selected_tech:
             advancedtw = scale_plf(advancedtw, slf, atm)
             advancedtw = advancedtw.merge(target[['Year', 'Billion RPK']], on='Year')
             advancedtw['EI CO2'] = advancedtw.apply(lambda row: row['Billion RPK'] * row['EI (CO2/RPK)'], axis=1)
             advancedtw = advancedtw[advancedtw['EI CO2'].notna()]
-            p.line(advancedtw['Year'], advancedtw['EI CO2'], line_color='blue', legend_label='Advanced TW', line_width=3, line_dash='dotdash')
+            p.line(advancedtw['Year'], advancedtw['EI CO2'], line_color='blue', legend_label='Advanced TW', line_width=3)
         if 'TTBW' in selected_tech:
             ttbw = scale_plf(ttbw, slf, atm)
             ttbw = ttbw.merge(target[['Year', 'Billion RPK']], on='Year')
             ttbw['EI CO2'] = ttbw.apply(lambda row: row['Billion RPK'] * row['EI (CO2/RPK)'], axis=1)
             ttbw = ttbw[ttbw['EI CO2'].notna()]
-            p.line(ttbw['Year'], ttbw['EI CO2'], line_color='blue', legend_label='TTBW', line_width=3, line_dash='dotdash')
+            p.line(ttbw['Year'], ttbw['EI CO2'], line_color='blue', legend_label='TTBW', line_width=3)
         if 'Double Bubble' in selected_tech:
             doublebubble = scale_plf(doublebubble, slf, atm)
             doublebubble = doublebubble.merge(target[['Year', 'Billion RPK']], on='Year')
             doublebubble['EI CO2'] = doublebubble.apply(lambda row: row['Billion RPK'] * row['EI (CO2/RPK)'], axis=1)
             doublebubble = doublebubble[doublebubble['EI CO2'].notna()]
-            p.line(doublebubble['Year'], doublebubble['EI CO2'], line_color='blue', legend_label='Double Bubble', line_width=3, line_dash='dotdash')
+            p.line(doublebubble['Year'], doublebubble['EI CO2'], line_color='blue', legend_label='Double Bubble', line_width=3)
         
         p.add_layout(Legend(), 'right')
 
@@ -273,7 +303,7 @@ def create_db1():
     checkbox2 = column(checkboxes2_title, checkboxes2)
     growth_rate_slider = Slider(title='Annual Growth Rate (%)', start=0, end=5, value=2, step=0.1, styles={'font-weight': 'bold'})
     slf_slider = Slider(title='Seat Load Factor 2050 (%)', start=80, end=100, value=90, step=0.5, styles={'font-weight': 'bold'})
-    atm_slider = Slider(title='ATM Improvements (%)', start=0, end=15, value=0, step=0.2, styles={'font-weight': 'bold'})
+    atm_slider = Slider(title='ATM Improvements 2050 (%)', start=0, end=15, value=0, step=0.2, styles={'font-weight': 'bold'})
     slider = pn.Column(slf_slider, growth_rate_slider, atm_slider)
     checkbox = pn.Column(checkbox1, checkbox2)
     everything = pn.Column(checkbox, slider)
@@ -306,11 +336,11 @@ def create_db1():
 
 # # Historic
 
-# In[23]:
+# In[149]:
 
 
 def create_db2():
-    line = pn.layout.Divider(width=800)
+    line = pn.layout.Divider(sizing_mode='stretch_width')
     text = """
     <div style="max-width: 600px">
     This dashboard presents a comprehensive overview of historical efficiency improvements made in the commercial aircraft industry. The dataset spans from the introduction of the De Havilland DH.106 Comet 4 in 1958 to the latest Boeing 787-10 Dreamliner.
@@ -321,15 +351,16 @@ def create_db2():
     
     - Technological Improvements and Operational Improvements: This category encompasses the combined impact of technological advancements and operational enhancements, specifically related to passenger load factor (SLF).
     
-    The complete code can be find in the <a href="https://github.com/rohrerph/Master_Thesis_Codes">GitHub Repository</a>
+    The complete code can be find in the <a href="https://github.com/sustainableaviation">GitHub Repository</a>
     </div>
     """
-    ida = pd.read_excel(r'Dashboard.xlsx')
+    ida = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/Dashboard.xlsx'
+    ida = pd.read_excel(ida)
     ida = ida.set_index('YOI')
     initial = pd.Series([0]*len(ida.columns), name=1958)
     ida.loc[1958] = 0
     ida = ida.sort_index()
-    ida = ida+ 100
+    ida = ida
 
     ida_tech = ida[['deltaC_Engine', 'deltaC_Aerodyn','deltaC_Structural', 'deltaC_Res', 'deltaC_Tot']]
     ida_tech = ida_tech.rename(columns={
@@ -386,7 +417,7 @@ def create_db2():
 
 
         p = figure(x_range=df_dif['Eff'], title=f"Efficiency Improvements Between {start_year} and {end_year}",
-                   x_axis_label='Timeline', y_axis_label='Efficiency Increase: Basis 1959',  width=800, height=400, )
+                   x_axis_label='Timeline', y_axis_label='Efficiency Increase: Basis 1958',  width=800, height=400, )
 
         eff = 'Eff'
         ops = '_Operational'
@@ -420,7 +451,7 @@ def create_db2():
         p.add_layout(start)
         p.add_layout(middle)
         p.add_layout(end)
-        line = Span(location=100, dimension='width', line_color='black', line_width=3, line_dash='dashed')
+        line = Span(location=0, dimension='width', line_color='black', line_width=3, line_dash = 'dashed')
         p.add_layout(line)
 
         return p
@@ -467,23 +498,51 @@ def create_db2():
     return dashboard
 
 
+# In[150]:
+
+
+def create_db3(): 
+    line = pn.layout.Divider(sizing_mode='stretch_width')
+    text = """
+    <div style="max-width: 600px">
+    In the following graph, overall efficiency improvements are visualized, starting with the first commercial aircraft, the de Havilland Comet 1. 
+    
+    Future projections are also integrated in the graph for comparison. The SB-Wing, Double Bubble, Advanced TW and BWB projects overall efficiency improvements were all given in literature in relation, to a current aircraft.
+    
+    The TW Limit is calculated based on the maximal sub-efficiency improvements that can be achieved with respect to technological and economic limitations. 
+    </div>
+    """
+    ovr_eff = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/ovr_efficiency.png'
+    ovr_eff = pn.pane.PNG(ovr_eff, width=800)
+    
+    dashboard = pn.Column(text,line, ovr_eff)
+    
+    return dashboard
+    
+
+
 # # Create DB
 
-# In[26]:
+# In[151]:
 
 
 dashboard_container = pn.Column()
 
-title = pn.pane.Markdown("Aircraft Efficiency Assessment", styles={'font-size': '24px', 'font-weight': 'bold'})
-
+title = pn.pane.HTML("""
+<h1 style='font-size:36px;font-weight:bold;'>Aircraft Performance Analysis Tool</h1>
+""")
 # Create a logo
-psi = pn.pane.PNG('psilogo.png', width=150, height=150)
-esa = pn.pane.PNG('esalogo.png', width=150, height=150)
+psi = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/psilogo.png'
+psi = pn.pane.PNG(psi, width=150, height=100)
+esa = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/esalogo.png'
+esa = pn.pane.PNG(esa, width=150, height=100)
+eth = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/eth.png'
+eth = pn.pane.PNG(eth, width=150, height=100)
 
 # Create a panel to hold the title and logo
-header = pn.Row(title, esa, psi, align="center")
-
-line = pn.layout.Divider(width=800)
+line = pn.layout.Divider(sizing_mode='stretch_width')
+# Create the row with aligned items
+header = pn.Row(title,pn.Spacer(width=100),psi,esa,eth,)
 
 def update_dashboard(event):
     selection_value = event.new
@@ -495,6 +554,8 @@ def update_dashboard(event):
         dashboard = data()
     elif selection_value == 'Historic Efficiency Decomposition':
         dashboard = create_db2()
+    elif selection_value == 'Overall Efficiency Improvements':
+        dashboard = create_db3()
     else:
         raise ValueError("Invalid dashboard selection.")
     dashboard_container.clear()
@@ -504,11 +565,29 @@ def update_dashboard(event):
 dashboard = create_db1()
 dashboard_container.append(dashboard)
 
-selection = pn.widgets.RadioButtonGroup(options=['Forecast', 'Historic Efficiency Decomposition','Data', 'Author'], name='Select Dashboard', value='Forecast')
+selection = pn.widgets.RadioButtonGroup(options=['Forecast', 'Historic Efficiency Decomposition', 'Overall Efficiency Improvements','Data', 'Author'], name='Select Dashboard', value='Forecast')
 selection.param.watch(update_dashboard, 'value')
 
 layout = pn.Column(header,line, selection,line, dashboard_container)
 layout.servable()
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:

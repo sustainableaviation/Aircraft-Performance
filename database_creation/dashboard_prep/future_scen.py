@@ -255,11 +255,11 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
                                           target['EI (CO2/RPK)'])
     target.loc[target['Year'] < 2005, 'IATA Target CO2'] = ''
 
-    # EUROCONTROL 65% OF ALl EMISSIONS
+    # EUROCONTROL 75% OF ALl EMISSIONS
     rpk_2011 = historic_rpk.loc[historic_rpk['Year'] == 2011, 'Billion RPK'].values[0]
     ec_target_start = target.loc[target['Year'] == 2011, 'EI (CO2/RPK)'].values[0]
     ec_target_start = rpk_2011*ec_target_start
-    ec_percentage_decrease = 0.015
+    ec_percentage_decrease = 0.035
     target['EC Target CO2'] = np.where(target['Year'] >= 2011,
                                           ec_target_start * (1 - ec_percentage_decrease) ** (target['Year'] - 2011),
                                           target['EI (CO2/RPK)'])

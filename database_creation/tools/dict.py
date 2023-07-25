@@ -51,7 +51,7 @@ class AirplaneModels:
                        'Airbus Industrie A-318': 2003,
                        'Airbus Industrie A300B/C/F-100/200': 1974,
                        'Airbus Industrie A310-200C/F' : 1983,
-                       'Airbus Industrie A321-200n':2007,
+                       'Airbus Industrie A321-200n':2017,
                        'Boeing 727-100':1964,
                        'Boeing 737-200C':1968,
                        'Boeing 747SP':1976,
