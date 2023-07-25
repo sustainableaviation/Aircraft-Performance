@@ -290,10 +290,10 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
         plt.savefig(folder_path+'/futurefleeteff.png')
 
     ### Compare annual value with the single aircraft values
-    annual_data = pd.read_excel(r'C:\Users\PRohr\Desktop\Masterarbeit\Python\test_env\database_creation\rawdata\annualdata.xlsx')
+    annual_data = pd.read_excel(r'database_creation\rawdata\annualdata.xlsx')
     annual_data = annual_data[['Year', 'EU (MJ/ASK)']]
     annual_data = annual_data.rename(columns={'Year': 'YOI'})
-    data = pd.read_excel(r'C:\Users\PRohr\Desktop\Masterarbeit\Python\test_env\Databank.xlsx')
+    data = pd.read_excel(r'Databank.xlsx')
     data = data.loc[data['Type']!='Regional']
     data = data[['YOI', 'EU (MJ/ASK)']]
     data = data.rename(columns={'EU (MJ/ASK)': 'EU Aircraft'})
