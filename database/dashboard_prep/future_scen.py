@@ -232,7 +232,7 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
     ttwb.to_excel(r'dashboard\ttwb.xlsx')
 
 
-    ###############################     TARGER SCENARIOS
+    ###############################     TARGET SCENARIOS
     # ICAO Target 60% Reduction per CO2/RPK
     target = annual_data
     target = target.merge(years, how='outer')
@@ -290,17 +290,6 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
         plt.savefig(folder_path+'/futurefleeteff.png')
 
     ### Compare annual value with the single aircraft values
-    annual_data = pd.read_excel(r'database\rawdata\annualdata.xlsx')
-    annual_data = annual_data[['Year', 'EU (MJ/ASK)']]
-    annual_data = annual_data.rename(columns={'Year': 'YOI'})
-    data = pd.read_excel(r'Databank.xlsx')
-    data = data.loc[data['Type']!='Regional']
-    data = data[['YOI', 'EU (MJ/ASK)']]
-    data = data.rename(columns={'EU (MJ/ASK)': 'EU Aircraft'})
-    data = data.merge(annual_data, on='YOI', how='outer')
-    data = data.sort_values('YOI')
-    data = data.fillna(0)
-    # Lets still see if this could work...
 
     # Load Dictionaries
     airplanes_dict = dict.AirplaneModels().get_models()
@@ -309,7 +298,6 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
     # Read Input Data
     T2 = pd.read_csv(r"database\rawdata\USDOT\T_SCHEDULE_T2.csv")
     AC_types = pd.read_csv(r"database\rawdata\USDOT\L_AIRCRAFT_TYPE (1).csv")
-
 
     # What is the Fleet Age ?
     # Prepare Data from schedule T2
