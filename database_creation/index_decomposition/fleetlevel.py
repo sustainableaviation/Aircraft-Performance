@@ -3,7 +3,7 @@ from test_env.database_creation.tools import dict, plot, T2_preprocessing
 import numpy as np
 import matplotlib.pyplot as plt
 def calculate(savefig, folder_path):
-        databank = pd.read_excel(r'C:\Users\PRohr\Desktop\Masterarbeit\Python\test_env\Databank.xlsx')
+        databank = pd.read_excel(r'Databank.xlsx')
         databank = databank[['Name', 'Type', 'TSFC Cruise', 'EU (MJ/ASK)', 'OEW/Exit Limit', 'L/D estimate']]
         airplanes_dict = dict.AirplaneModels().get_models()
         aircraftnames = dict.AircraftNames().get_aircraftnames()
@@ -12,8 +12,8 @@ def calculate(savefig, folder_path):
         fullnames = dict.fullname().get_aircraftfullnames()
 
         # Read Data
-        T2 = pd.read_csv(r'/test_env/database_creation/rawdata/USDOT/T_SCHEDULE_T2.csv')
-        AC_types = pd.read_csv(r"/test_env/database_creation/rawdata/USDOT/L_AIRCRAFT_TYPE (1).csv")
+        T2 = pd.read_csv(r'database_creation/rawdata/USDOT/T_SCHEDULE_T2.csv')
+        AC_types = pd.read_csv(r"database_creation/rawdata/USDOT/L_AIRCRAFT_TYPE (1).csv")
 
         # Prepare Data from schedule T2
         T2 = T2_preprocessing.preprocessing(T2, AC_types, airlines, airplanes)
@@ -102,7 +102,6 @@ def calculate(savefig, folder_path):
         # Get percentage increase of each efficiency and drop first row which only contains NaN
         data = data[['YEAR', 'deltaC_Structural', 'deltaC_Engine', 'deltaC_Aerodyn', 'deltaC_Res', 'deltaC_Tot']]
         data = data.drop(0)
-        data.to_excel(r'Dashboard.xlsx', index=False)
         data = data.set_index('YEAR')
 
         # Set the width of each group and create new indexes just the set the space right
