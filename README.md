@@ -26,7 +26,6 @@ As an output the Excel File Databank.xlsx will be produced.
 * [payload_range](database/aerodynamics/payload_range.py) : Creates Payload Range Diagrams for the A320 and the B777-200
 * [index_decomposition](database/index_decomposition/technological.py) : Decomposes the Technical Efficiency Improvements MJ/ASK into Structural, Aerodynamic, Engine and Residual Efficiency.  
 * [index_decomposition_operational](database/index_decomposition/technooperational.py) : Integrates the SLF to calculate MJ/RPK and decomposes the efficiency gains into Structural, Aerodynamic, Engine, Operational and Residual.
-* [index_decomposition_engine](database/index_decomposition/engine.py) : Decomposes Engine Efficiency into Thermal- and Propulsive- Efficiency
 * [future_scen](database_creation.dashboard_prep.future_scen.py) : Calculate Efficiency and CO2 emissions for Future Aircraft Scenarios
 * 
 ### Tools
@@ -42,4 +41,5 @@ All the input files and the main file to generate the dashboard are locate din t
 git clone https://github.com/sustainableaviation/Aircraft-Performance.git
 ```
 2. Install all needed Packages
-3. Head over to the test_env.master.py File and execute the simulation
+3. Head over to the main.py File and execute the simulation
+4. Start A Jupyter Notebook and Execute the main_db.ipynb File to create the Dashboard
