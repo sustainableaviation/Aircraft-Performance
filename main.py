@@ -1,4 +1,23 @@
-import database.dashboard_prep.fleet_behavior
+import database.tools.atmospheric_conditions
+import database.operational.airtimeefficiency
+import database.overall.overallefficiency
+import database.emissions.icaoemssions
+import database.emissions.to_vs_cruise_sfc
+import database.overall.aircraft_engine_configurations
+import database.emissions.engine_statistics
+import database.emissions.thermal_efficiency
+import database.emissions.propulsive_efficiency
+import database.structural.structuralefficiency
+import database.operational.seats
+import database.operational.seatloadfactor
+import database.aerodynamics.aerodynamicefficiency
+import database.aerodynamics.aerodynamic_statistics
+import database.emissions.therm_prop_eff
+import database.overall.aggregate_per_aircraft
+import database.index_decomposition.technological
+import database.index_decomposition.technooperational
+import database.aerodynamics.payload_range
+import database.dashboard_prep.future_scen
 import warnings
 import datetime
 import os
@@ -62,8 +81,6 @@ print(' --> [INDEX DECOMPOSITION ANALYSIS]: LMDI for Technical Sub-Efficiencies'
 database.index_decomposition.technological.calculate(savefig, folder_path)
 print(' --> [INDEX DECOMPOSITION ANALYSIS]: LMDI for Technical and Operational Sub-Efficiencies')
 database.index_decomposition.technooperational.calculate(savefig, folder_path)
-print(' --> [INDEX DECOMPOSITION ANALYSIS]: LMDI for Engine Sub-Efficiencies')
-database.index_decomposition.engine.calculate(savefig, folder_path)
 print(' --> [PREPARE DASHBOARD]: Create Future Scenarios')
 database.dashboard_prep.future_scen.calculate(limit_tsfc, limit_aero, savefig, folder_path)
 print(' --> [FINISH]')

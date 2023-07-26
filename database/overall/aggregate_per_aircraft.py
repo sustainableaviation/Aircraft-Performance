@@ -32,7 +32,7 @@ def calculate():
                            'Overcome Thrust']]
     aircrafts = aircrafts.groupby(['Company','Name','Type','YOI'], as_index=False).agg('mean')
     aircrafts.to_excel(r'Databank.xlsx', index=False)
-    aircrafts.to_excel(r'dashboard/Databank.xlsx', index=False)
+    aircrafts.to_excel(r'dashboard/data/Databank.xlsx', index=False)
 
 
 

@@ -142,7 +142,7 @@ def calculate(savefig, folder_path):
     # Get percentage increase of each efficiency and drop first row which only contains NaN
     data = data[['YOI', 'deltaC_Structural', 'deltaC_Engine', 'deltaC_Aerodyn', 'deltaC_Res', 'deltaC_Tot']]
     data = data.drop(0)
-    data.to_excel(r'dashboard\Dashboard.xlsx', index=False)
+    data.to_excel(r'dashboard\data\Dashboard.xlsx', index=False)
     data = data.set_index('YOI')
 
     # Set the width of each group and create new indexes just the set the space right

@@ -121,10 +121,10 @@ def calculate(savefig, folder_path):
 
     # Get percentage increase of each efficiency and drop first row which only contains NaN
     data = data[['YOI', 'deltaC_Structural_Ops', 'deltaC_Engine_Ops', 'deltaC_Aerodyn_Ops', 'deltaC_SLF_Ops','deltaC_Res_Ops', 'deltaC_Tot_Ops']]
-    dashboard = pd.read_excel(r'dashboard\Dashboard.xlsx')
+    dashboard = pd.read_excel(r'dashboard\data\Dashboard.xlsx')
     data = data.drop(data.index[0])
     dashboard = dashboard.merge(data, on='YOI')
-    dashboard.to_excel(r'dashboard\Dashboard.xlsx', index=False)
+    dashboard.to_excel(r'dashboard\data\Dashboard.xlsx', index=False)
     data = data.set_index('YOI')
 
     # Set the width of each group and create new indexes just the set the space right

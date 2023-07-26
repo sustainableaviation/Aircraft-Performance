@@ -60,8 +60,7 @@ def calculate(savefig, km, mj, folder_path):
        boeing747 = airplanes_release_year.loc[airplanes_release_year['Description']=='Boeing 747-400', 'MJ/ASK'].iloc[0]
        a380 = {'Description': 'A380', 'MJ/ASK': 0.88*boeing747}
        airplanes_release_year = airplanes_release_year.append(a380, ignore_index=True)
-       airplanes_release_year.to_excel(
-              r'C:\Users\PRohr\Desktop\Masterarbeit\Python\test_env\dashboard_creation\aircraft.xlsx')
+       airplanes_release_year.to_excel(r'dashboard\data\aircraft.xlsx')
 
        # Divide between Regional Aircraft and the Rest.
        regionalcarriers = ['Canadair CRJ 900','Canadair RJ-200ER /RJ-440', 'Canadair RJ-700','Embraer 190'
@@ -74,8 +73,7 @@ def calculate(savefig, km, mj, folder_path):
        comet1 = {'Label': 'Comet 1', 'EU (MJ/ASK)': 2.499*comet4['EU (MJ/ASK)'], 'Year': 1952}
        lee = lee.append(comet4, ignore_index=True)
        lee = lee.append(comet1, ignore_index=True)
-       lee.to_excel(
-              r'C:\Users\PRohr\Desktop\Masterarbeit\Python\test_env\dashboard_creation\aircraft_lee.xlsx')
+       lee.to_excel(r'dashboard\data\aircraft_lee.xlsx')
 
        # Plot Comet 4 Separately
        comet4 = lee.loc[lee['Label']=='Comet 4']
@@ -178,5 +176,5 @@ def calculate(savefig, km, mj, folder_path):
        fleet_avg_year['EI (MJ/RPK)'] = fleet_avg_year['EU (MJ/ASK)']/fleet_avg_year['PLF']
 
        #Save DF
-       fleet_avg_year.to_excel(r'database\rawdata\annualdata.xlsx', index=False)
+       fleet_avg_year.to_excel(r'dashboard\data\annualdata.xlsx', index=False)
 
