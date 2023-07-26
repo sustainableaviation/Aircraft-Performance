@@ -273,12 +273,12 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
     # Add a subplot
     ax = fig.add_subplot(1, 1, 1)
 
-    ax.plot(techlimit['Year'], techlimit['EU (MJ/ASK)'], color='blue', label='Tech Limit')
+    ax.plot(techlimit['Year'], techlimit['EU (MJ/ASK)'], color='blue', label='TW Tech Limit')
     ax.plot(advancedtw['Year'], advancedtw['EU (MJ/ASK)'], color='purple', label='Advanced TW')
     ax.plot(bwb['Year'], bwb['EU (MJ/ASK)'], color='green', label='Blended Wing Body')
     ax.plot(doublebubble['Year'], doublebubble['EU (MJ/ASK)'], color='grey', label='Double Bubble D8')
     ax.plot(ttwb['Year'], ttwb['EU (MJ/ASK)'], color='pink', label='Strut-Braced Wing')
-    ax.plot(techfreeze['Year'],techfreeze['EU (MJ/ASK)'],color='red', label= 'Tech Freeze', zorder=2)
+    ax.plot(techfreeze['Year'],techfreeze['EU (MJ/ASK)'],color='red', label= 'TW Tech Freeze', zorder=2)
     ax.legend()
     ylabel = 'Energy Usage (MJ/ASK)'
     xlabel = 'Year'

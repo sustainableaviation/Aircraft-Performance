@@ -40,7 +40,7 @@ def calculate(savefig, folder_path):
     norm_column_data1 = norm(column_data1)
     norm_column_data2 = norm(column_data2)
     # create a colormap and map normalized values to colors
-    cmap = plt.colormaps.get_cmap('cool')
+    cmap = plt.colormaps.get_cmap('viridis')
     colors = cmap(norm_column_data1)
     colors2 = cmap(norm_column_data2)
 

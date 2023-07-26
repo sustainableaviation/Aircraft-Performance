@@ -32,7 +32,7 @@ def calculate(savefig, flight_speed, folder_path):
     column_data = pd.to_numeric(data['YOI'])
     norm = mcolors.Normalize(vmin=column_data.min(), vmax=column_data.max())
     norm_column_data = norm(column_data)
-    cmap = plt.colormaps.get_cmap('cool')
+    cmap = plt.colormaps.get_cmap('viridis')
     colors = cmap(norm_column_data)
 
     # ---------PLOT PROP vs THERMAL EFF. -------------
@@ -41,16 +41,16 @@ def calculate(savefig, flight_speed, folder_path):
 
     ax.scatter(data['prop_eff'], data['thermal_eff'], marker='o', c=colors)
 
-    ellipse2 = Ellipse((0.85, 0.48), 0.04, 0.03, color='darkred', fill=False)
+    ellipse2 = Ellipse((0.85, 0.48), 0.04, 0.03, color='r', fill=False)
     ax.text(0.85, 0.48, 'Future HBR Engines', horizontalalignment='center', verticalalignment='center')
     ellipse3 = Ellipse((0.91, 0.5), 0.03, 0.05, color='r', fill=False)
     ax.text(0.91, 0.5, 'Future Open Rotor Engines', horizontalalignment='center', verticalalignment='center')
 
     ax.add_artist(ellipse2)
     ax.add_artist(ellipse3)
-    ax.vlines(0.925,0.4,0.65, color='b', label='Theoretical Limit')
-    ax.hlines(0.55,0.7,1, color='r', label='Practical Limit NOx', linestyles='--')
-    ax.hlines(0.6,0.7,1, color='r', label='Theoretical Limit')
+    ax.vlines(0.925,0.4,0.6, color='black', label='Theoretical Limit')
+    ax.hlines(0.55,0.7,0.925, color='black', label='Practical Limit NOx', linestyles='--')
+    ax.hlines(0.6,0.7,0.925, color='black')
 
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
@@ -59,7 +59,7 @@ def calculate(savefig, flight_speed, folder_path):
     xlabel = 'Propulsive Efficiency [\%]'
     ylabel = 'Thermal Efficiency [\%]'
     plt.ylim(0.4, 0.65)
-    plt.xlim(0.7, 1)
+    plt.xlim(0.7, .95)
 
     plot.plot_layout(None, xlabel, ylabel, ax)
     if savefig:

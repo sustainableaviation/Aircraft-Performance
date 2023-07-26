@@ -50,7 +50,7 @@ def calculate(savefig, folder_path, temp):
     fig, ax = plt.subplots(dpi=300)
 
     # Plot the array as a heatmap using imshow
-    im = ax.imshow(data[::-1], cmap='coolwarm', aspect='auto')
+    im = ax.imshow(data[::-1], cmap='viridis', aspect='auto')
     contours = plt.contour(data[::-1], colors='black', linestyles='dashed', levels=10)
     plt.clabel(contours, inline=True, fontsize=10)
     plt.colorbar(im, label='Thermal Efficiency [\%]')

@@ -31,7 +31,7 @@ def calculate(savefig, folder_path, vel, air_density):
     fig, ax = plt.subplots(dpi=300)
 
     # Plot the array as a heatmap using imshow
-    im = ax.imshow(efficiency_heatmap[::-1], cmap='coolwarm', aspect='auto')
+    im = ax.imshow(efficiency_heatmap[::-1], cmap='viridis', aspect='auto')
     contours = plt.contour(efficiency_heatmap[::-1], colors='black', linestyles='dashed', levels=10)
     plt.clabel(contours, inline=True, fontsize=10)
     plt.colorbar(im, label='Propulsive Efficiency [\%]')
