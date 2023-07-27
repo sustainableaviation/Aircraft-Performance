@@ -21,6 +21,8 @@ As an output the Excel File Databank.xlsx will be produced.
 * [seatloadfactor](database/operational/seatloadfactor.py) : SLF measured by the US DOT and the ICAO are gathered. 
 * [aerodynamicefficiency](database/aerodynamics/aerodynamicefficiency.py) : Using the Breguet Range Equation and Data regarding the Weight and Range of Aircraft from Airport Planning Manuals the Aerodynamic Efficiency is calculated. To do so, the TSFC calculated before is used. The results are then added to the Databank. 
 * [therm_prop_eff](database/emissions/therm_prop_eff.py) : This File splits the Engine Efficiency into Propulsive and Thermal Efficiency by calculating the Propulsive Efficiency, assuming that Propulsive efficiency * Thermal efficiency = Engine efficiency. The values are then added to the Databank.   
+* [thermal_efficiency](database/emissions/thermal_efficiency.py) : Calculates maximal thermal efficiency based on a Brayton Cycle
+* [propulsive_efficiency](database/emissions/propulsive_efficiency.py) : Calculates maximal propulsive efficiency based on the fan diameter and the required thrust
 * [aggregate_per_aircraft](database/overall/aggregate_per_aircraft.py) : The Databank contains now multiple entries for each Aircraft, accounting for different Engines, different OEW and MTOW series. This file groups all the data on Aircraft Level. 
 * [aerodynamic_statistics](database/aerodynamics/aerodynamic_statistics.py) : Creates Plots regarding the FAA Box Limit and the evolution of AR
 * [payload_range](database/aerodynamics/payload_range.py) : Creates Payload Range Diagrams for the A320 and the B777-200
