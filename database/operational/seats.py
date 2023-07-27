@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from test_env.database_creation.tools import dict
+from database.tools import dict
 
 def calculate():
 

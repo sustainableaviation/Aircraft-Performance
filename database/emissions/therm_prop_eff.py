@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse
-from test_env.database_creation.tools import plot
+from database.tools import plot
 
 
 def calculate(savefig, flight_speed, folder_path):

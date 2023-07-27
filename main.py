@@ -22,7 +22,7 @@ import warnings
 import datetime
 import os
 current_date = datetime.datetime.now()
-datestamp = current_date.strftime("%Y-%m-%d")
+datestamp = current_date.strftime("%Y-%m")
 warnings.filterwarnings("ignore")
 
 # Create output folder with today's date and save graphs here

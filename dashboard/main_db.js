@@ -50,7 +50,7 @@ init_doc()
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[37]:
+# In[28]:
 
 
 import panel as pn
@@ -58,7 +58,7 @@ import pandas as pd
 import numpy as np
 from bokeh.io import show
 from bokeh.plotting import figure
-from bokeh.models import ColumnDataSource, RadioButtonGroup, CustomJS, Label, Span, MultiLine, Text
+from bokeh.models import ColumnDataSource, RadioButtonGroup, CustomJS, Label, Span, MultiLine, Text, HoverTool
 from bokeh.models import CheckboxGroup, Legend, Div, RadioGroup, SingleIntervalTicker, FixedTicker, LegendItem
 from bokeh.transform import dodge
 from bokeh.transform import cumsum
@@ -80,11 +80,11 @@ pn.extension(design='material')
 
 # # Authors
 
-# In[38]:
+# In[9]:
 
 
 def about_authors(): 
-    philipp = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/Philipp.JPG'
+    philipp = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/Philipp.JPG'
     pic1 = pn.pane.JPG(philipp, width=150, height=200)
     text1 = """
     The best student 
@@ -96,7 +96,7 @@ def about_authors():
     - Bachelor: Mech. Engineering, ETH Zurich, 2018-2021
     
     """
-    michael = 'https://github.com/rohrerph/Master_Thesis_Codes/raw/master/test_env/dashboard_creation/michael.png'
+    michael = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/michael.png'
     pic2 = pn.pane.PNG(michael, width=150, height=200)
     text2 = """
     The best supervisor 
@@ -104,7 +104,7 @@ def about_authors():
     Michael is a doctoral researcher in the Group for Technology Assessment under the supervision of Dr. Chris Mutel and Dr. Romain Sacchi at the Paul Scherrer Institute and Prof. Russell McKenna in the Department of Mechanical and Process Engineering of ETH Zurich.
     
     Education: 
-    - PhD: Life-Cycle Assessment for Sustainable Aviation, PSI/ETH Zürich, 2022-ongoing
+    - PhD: Life-Cycle Assessment for Sustainable Aviation, PSI/ETH Zurich, 2022-ongoing
     - Master: Physics, ETH Zurich, 2018-2020
     - Bachelor: Engineering Physics, TU Vienna, 2014-2018
     
@@ -118,11 +118,11 @@ def about_authors():
 
 # # Data
 
-# In[39]:
+# In[10]:
 
 
 def data(): 
-    databank = 'https://raw.githubusercontent.com/rohrerph/Master_Thesis_Codes/master/test_env/dashboard_creation/Databank.xlsx'
+    databank = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/Databank.xlsx'
     databank = pd.read_excel(databank)
     text = """
     In the following Table the values for each sub-efficiency (Overall, Engine, Aerodynamic, Structural) for the 72 
@@ -156,7 +156,7 @@ def data():
 
 # # Future
 
-# In[40]:
+# In[49]:
 
 
 def create_db1(): 
@@ -181,19 +181,19 @@ def create_db1():
     
     #Load Files from Github. 
     
-    freeze = 'https://raw.githubusercontent.com/rohrerph/Master_Thesis_Codes/master/test_env/dashboard_creation/techfreeze.xlsx'
+    freeze = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/techfreeze.xlsx'
     freeze = read_excel_from_github(freeze)
-    limit = 'https://raw.githubusercontent.com/rohrerph/Master_Thesis_Codes/master/test_env/dashboard_creation/techlimit.xlsx'
+    limit = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/techlimit.xlsx'
     limit = read_excel_from_github(limit)
-    bwb = 'https://raw.githubusercontent.com/rohrerph/Master_Thesis_Codes/master/test_env/dashboard_creation/bwb.xlsx'
+    bwb = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/bwb.xlsx'
     bwb = read_excel_from_github(bwb)
-    advancedtw = 'https://raw.githubusercontent.com/rohrerph/Master_Thesis_Codes/master/test_env/dashboard_creation/advancedtw.xlsx'
+    advancedtw = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/advancedtw.xlsx'
     advancedtw = read_excel_from_github(advancedtw)
-    doublebubble = 'https://raw.githubusercontent.com/rohrerph/Master_Thesis_Codes/master/test_env/dashboard_creation/doublebubble.xlsx'
+    doublebubble = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/doublebubble.xlsx'
     doublebubble = read_excel_from_github(doublebubble)
-    ttbw = 'https://raw.githubusercontent.com/rohrerph/Master_Thesis_Codes/master/test_env/dashboard_creation/ttwb.xlsx'
+    ttbw = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/ttwb.xlsx'
     ttbw = read_excel_from_github(ttbw)
-    target = 'https://raw.githubusercontent.com/rohrerph/Master_Thesis_Codes/master/test_env/dashboard_creation/target.xlsx'
+    target = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/target.xlsx'
     target = read_excel_from_github(target)
 
     # Define the initial growth rate and limits
@@ -290,8 +290,10 @@ def create_db1():
             doublebubble['EI CO2'] = doublebubble.apply(lambda row: row['Billion RPK'] * row['EI (CO2/RPK)'], axis=1)
             doublebubble = doublebubble[doublebubble['EI CO2'].notna()]
             p.line(doublebubble['Year'], doublebubble['EI CO2'], line_color='blue', legend_label='Double Bubble', line_width=3)
-        
-        p.add_layout(Legend(), 'right')
+        p.grid.grid_line_color = 'gray'
+        p.grid.grid_line_alpha = 0.3
+        p.grid.minor_grid_line_color = 'navy'
+        p.grid.minor_grid_line_alpha = 0.1
 
         return p
 
@@ -337,7 +339,7 @@ def create_db1():
 
 # # Historic
 
-# In[41]:
+# In[50]:
 
 
 def create_db2():
@@ -355,7 +357,7 @@ def create_db2():
     The complete code can be find in the <a href="https://github.com/sustainableaviation">GitHub Repository</a>
     </div>
     """
-    ida = 'https://raw.githubusercontent.com/rohrerph/Master_Thesis_Codes/master/test_env/dashboard_creation/Dashboard.xlsx'
+    ida = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/Dashboard.xlsx'
     ida = pd.read_excel(ida)
     ida = ida.set_index('YOI')
     initial = pd.Series([0]*len(ida.columns), name=1958)
@@ -453,6 +455,12 @@ def create_db2():
         p.add_layout(middle)
         p.add_layout(end)
         line = Span(location=0, dimension='width', line_color='black', line_width=3, line_dash = 'dashed')
+        p.ygrid.grid_line_color = 'gray'
+        p.ygrid.grid_line_alpha = 0.3
+        p.ygrid.minor_grid_line_color = 'navy'
+        p.ygrid.minor_grid_line_alpha = 0.1
+        p.xgrid.grid_line_color = None
+        p.xaxis.major_tick_line_color = None
         p.add_layout(line)
 
         return p
@@ -471,6 +479,7 @@ def create_db2():
 
             p = plot(start_year,middle_year, end_year, selected_variable)
             dashboard[-1][0] = p
+            
 
     # Create slider widget
     start_year_widget = pn.widgets.Select(name="Start Year", options=[str(year) for year in range(1958, 2019)], value =str(1958))
@@ -499,10 +508,16 @@ def create_db2():
     return dashboard
 
 
-# In[42]:
+# In[51]:
 
 
 def create_db3(): 
+    aircraft = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/aircraft.xlsx'
+    aircraft = pd.read_excel(aircraft)
+    
+    lee =  'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/aircraft_lee.xlsx'
+    lee = pd.read_excel(lee)
+
     line = pn.layout.Divider(sizing_mode='stretch_width')
     text = """
     <div style="max-width: 600px">
@@ -513,10 +528,70 @@ def create_db3():
     The TW Limit is calculated based on the maximal sub-efficiency improvements that can be achieved with respect to technological and economic limitations. 
     </div>
     """
-    ovr_eff = 'https://raw.githubusercontent.com/rohrerph/Master_Thesis_Codes/master/test_env/dashboard_creation/ovr_efficiency.png'
-    ovr_eff = pn.pane.PNG(ovr_eff, width=800)
     
-    dashboard = pn.Column(text,line, ovr_eff)
+    #Get aircraft data
+    regionalcarriers = ['Canadair CRJ 900','Canadair RJ-200ER /RJ-440', 'Canadair RJ-700','Embraer 190'
+                           'Embraer ERJ-175', 'Embraer-135','Embraer-145']
+    regional = aircraft.loc[aircraft['Description'].isin(regionalcarriers)]
+    normal = aircraft.loc[~aircraft['Description'].isin(regionalcarriers)]
+    comet4 = lee.loc[lee['Label']=='Comet 4']
+    comet1 = lee.loc[lee['Label'] == 'Comet 1']
+    rest = lee.loc[~lee['Label'].isin(['Comet 4', 'Comet 1'])]
+    
+    comet1_source = ColumnDataSource(data=dict(year=comet1['Year'], energy=comet1['EU (MJ/ASK)'], name=comet1['Label']))
+    comet4_source = ColumnDataSource(data=dict(year=comet4['Year'], energy=comet4['EU (MJ/ASK)'], name=comet4['Label']))
+    normal_source = ColumnDataSource(data=dict(year=normal['YOI'], energy=normal['MJ/ASK'], name=normal['Description']))
+    regional_source = ColumnDataSource(data=dict(year=regional['YOI'], energy=regional['MJ/ASK'], name=regional['Description']))
+    rest_source = ColumnDataSource(data=dict(year=rest['Year'], energy=rest['EU (MJ/ASK)'], name=rest['Label']))
+    sbwing_source = ColumnDataSource(data=dict(year=[2035], energy=[0.592344579], name=['SB-Wing']))
+    db_source = ColumnDataSource(data=dict(year=[2035], energy=[0.381840741], name=['Double Bubble']))
+    adv_tw_source = ColumnDataSource(data=dict(year=[2040], energy=[0.82264895], name=['Advanced TW']))
+    bwb_source = ColumnDataSource(data=dict(year=[2040], energy=[0.797082164], name=['BWB']))
+    twlimit_source = ColumnDataSource(data=dict(year=[2050], energy=[0.618628347], name=['TW Limit']))
+
+    # Create the figure
+    p = figure(width=800, height=400,)
+
+    # Scatter plots
+    comet1_renderer = p.scatter('year', 'energy', source=comet1_source, marker='*', size = 10,  color='blue', legend_label='Comet 1')
+    comet4_renderer = p.scatter('year', 'energy', source=comet4_source, marker='star', size = 10, color='blue', legend_label='Comet 4')
+    normal_renderer = p.scatter('year', 'energy', source=normal_source, marker='^', size = 10, color='blue', legend_label='US DOT T2')
+    regional_renderer = p.scatter('year', 'energy', source=regional_source, marker='^', size = 10, color='purple', legend_label='Regional US DOT T2')
+    rest_renderer = p.scatter('year', 'energy', source=rest_source, marker='o', size = 10, color='red', legend_label='Lee et al.')
+    sbwing_renderer = p.scatter('year', 'energy', source=sbwing_source, marker='square', size=10, color='black', legend_label='SB-Wing')
+    db_renderer = p.scatter('year', 'energy', source=db_source, marker='circle', size=10, color='black', legend_label='Double Bubble')
+    adv_tw_renderer = p.scatter('year', 'energy', source=adv_tw_source, marker='inverted_triangle', size=10, color='black', legend_label='Advanced TW')
+    bwb_renderer = p.scatter('year', 'energy', source=bwb_source, marker='star', size=10, color='black', legend_label='BWB')
+    twlimit_renderer = p.scatter('year', 'energy', source=twlimit_source, marker='triangle', size=10, color='black', legend_label='TW Limit')
+    
+    p.add_layout(Legend())
+
+    # Set axis labels
+    p.xaxis.axis_label = 'Aircraft Year of Introduction'
+    p.yaxis.axis_label = 'EU (MJ/ASK)'
+
+    # Set plot range and ticks
+    p.y_range.start = 0
+    p.y_range.end = 9
+    p.x_range.start = 1950
+    p.x_range.end = 2052
+    p.xaxis.ticker = list(range(1950, 2051, 10))
+    p.grid.grid_line_color = 'gray'
+    p.grid.grid_line_alpha = 0.3
+    p.grid.minor_grid_line_color = 'navy'
+    p.grid.minor_grid_line_alpha = 0.1
+    
+    hover = HoverTool()
+    hover.renderers = [comet1_renderer, comet4_renderer, normal_renderer, regional_renderer, rest_renderer, sbwing_renderer
+                      , db_renderer, adv_tw_renderer, bwb_renderer, twlimit_renderer]
+    hover.tooltips = [
+    ("Name", "@name"),
+    ("Year", "@year"),
+    ("EU (MJ/ASK)", "@energy"),
+    ]
+    p.add_tools(hover)
+
+    dashboard = pn.Column(text,line, p)
     
     return dashboard
     
@@ -524,7 +599,7 @@ def create_db3():
 
 # # Create DB
 
-# In[50]:
+# In[1]:
 
 
 dashboard_container = pn.Column()
@@ -533,11 +608,11 @@ title = pn.pane.HTML("""
 <h1 style='font-size:36px;font-weight:bold;'>Aircraft Performance Analysis Tool</h1>
 """)
 # Create a logo
-psi = 'https://raw.githubusercontent.com/rohrerph/Master_Thesis_Codes/master/test_env/dashboard_creation/psilogo.png'
+psi = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/psilogo.png'
 psi = pn.pane.PNG(psi, width=150, height=100)
-esa = 'https://raw.githubusercontent.com/rohrerph/Master_Thesis_Codes/master/test_env/dashboard_creation/esalogo.png'
+esa = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/esalogo.png'
 esa = pn.pane.PNG(esa, width=150, height=100)
-eth = 'https://raw.githubusercontent.com/rohrerph/Master_Thesis_Codes/master/test_env/dashboard_creation/eth.png'
+eth = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/eth.png'
 eth = pn.pane.PNG(eth, width=150, height=100)
 
 # Create a panel to hold the title and logo
@@ -563,10 +638,10 @@ def update_dashboard(event):
     dashboard_container.append(dashboard)
 
 # Set the initial dashboard to the "Historic Efficiency Decomposition" plot
-dashboard = data()
+dashboard = create_db1()
 dashboard_container.append(dashboard)
 
-selection = pn.widgets.RadioButtonGroup(options=['Forecast', 'Historic Efficiency Decomposition', 'Overall Efficiency Improvements','Data', 'Author'], name='Select Dashboard', value='Data')
+selection = pn.widgets.RadioButtonGroup(options=['Forecast', 'Historic Efficiency Decomposition', 'Overall Efficiency Improvements','Data', 'Author'], name='Select Dashboard', value='Forecast')
 selection.param.watch(update_dashboard, 'value')
 
 layout = pn.Column(header,line, selection,line, dashboard_container)
@@ -591,7 +666,7 @@ layout.servable()
 
 
 
-# In[ ]:
+# In[66]:
 
 
 

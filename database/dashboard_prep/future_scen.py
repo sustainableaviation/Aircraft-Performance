@@ -1,8 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from test_env.database_creation.tools import plot
-from test_env.database_creation.tools import dict, plot, T2_preprocessing
+from database.tools import dict, plot, T2_preprocessing
 import scipy.interpolate
 
 def calculate(limit_tsfc, limit_aero, savefig, folder_path):

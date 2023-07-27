@@ -1,13 +1,13 @@
-# Aircraft Performance Code Documentation
+# Aircraft Performance Modelling Tool 
 ## Repository Structure 
-## Database
-The folder database_creation contains all the files executed by the main.py. Further, the folder rawdata contains all Input Data and in the 
-folder "graphs", all created figures will be saved.
+## [Database](./database)
+This folder contains all the files executed by the [main.py](main.py). Further, the folder [rawdata](database/rawdata) contains all Input Data and in the 
+folder [graphs](database/graphs), all created figures will be saved.
 
-### main.py 
+### [main.py](main.py) 
 This is the main file, which executes the modelling pipeline. The Output Folder for all Graphs and all constants can be specified here. It will create a new output folder for the graphs for each day a simulation is carried out in order to not overwrite the existing ones. 
 You can choose the Mach number and the Altitude for which the analysis should be carried out. 
-As an output the Excel File Databank.xlsx will be produced.
+As an output the Excel File Databank.xlsx will be produced. 
 
 * [atmospheric_conditions](database/tools/atmospheric_conditions.py): Calculates the Air density, Flight velocity and Temperature
 * [airtimeefficiency](database/operational/airtimeefficiency.py): Calculates the Airtime Efficiency
@@ -26,12 +26,21 @@ As an output the Excel File Databank.xlsx will be produced.
 * [payload_range](database/aerodynamics/payload_range.py) : Creates Payload Range Diagrams for the A320 and the B777-200
 * [index_decomposition](database/index_decomposition/technological.py) : Decomposes the Technical Efficiency Improvements MJ/ASK into Structural, Aerodynamic, Engine and Residual Efficiency.  
 * [index_decomposition_operational](database/index_decomposition/technooperational.py) : Integrates the SLF to calculate MJ/RPK and decomposes the efficiency gains into Structural, Aerodynamic, Engine, Operational and Residual.
-* [future_scen](database_creation.dashboard_prep.future_scen.py) : Calculate Efficiency and CO2 emissions for Future Aircraft Scenarios
-* 
-### Tools
+* [future_scen](./database/dashboard_prep/future_scen.py) : Calculate Efficiency and CO2 emissions for Future Aircraft Scenarios
+### [Tools](database/tools)
 The tools folder contains some additionally helpful files, such as plotting properties or dictionaries to match the aircraft names from the different sources.
-## Dashboard
-All the input files and the main file to generate the dashboard are locate din this folder
+
+## [Dashboard](./dashboard)
+All the input files for the dashboard are generated during the modelling pipeline and will be directly saved in this folder. To generate the dashboard, the
+[main_db.ipynb](dashboard/main_db.ipynb) file should be executed in Jupyter Notebook. 
+
+The Dashboard contains the following sites: 
+
+* Future Scenarios: Produces future CO2 emission scenarios based on the chosen technology, SLF and ATM improvements and annual growth rate. 
+* Historical Efficiency Improvements: Shows the Results of the IDA
+* Overall Efficiency: Shows the results for the historical overall efficiency improvements
+* Data: DataFrame showing all Sub-Efficiencies for aircraft
+* Author: Some infos about the Authors
 
 
 ## Quickstart
@@ -41,5 +50,10 @@ All the input files and the main file to generate the dashboard are locate din t
 git clone https://github.com/sustainableaviation/Aircraft-Performance.git
 ```
 2. Install all needed Packages
-3. Head over to the main.py File and execute the simulation
-4. Start A Jupyter Notebook and Execute the main_db.ipynb File to create the Dashboard
+### Run Code
+3. Head over to the [main.py](main.py)  File and execute the simulation
+4. Use the terminal and type 
+```bash
+start jupyter notebook
+```
+5. Head over to the [main_db.ipynb](dashboard/main_db.ipynb) and execute to see the dashboard
