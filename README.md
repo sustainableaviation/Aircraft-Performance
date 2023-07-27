@@ -54,6 +54,7 @@ git clone https://github.com/sustainableaviation/Aircraft-Performance.git
 2. Install all needed Packages
 ### Run Code
 3. Head over to the [main.py](main.py)  File and execute the simulation
+4. Push the changes into the GitHub repository
 4. Use the terminal and type 
 ```bash
 start jupyter notebook
