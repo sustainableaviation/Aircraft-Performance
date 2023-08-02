@@ -30,10 +30,11 @@ As an output the Excel File Databank.xlsx will be produced.
 * [index_decomposition_operational](database/index_decomposition/technooperational.py) : Integrates the SLF to calculate MJ/RPK and decomposes the efficiency gains into Structural, Aerodynamic, Engine, Operational and Residual.
 * [future_scen](./database/dashboard_prep/future_scen.py) : Calculate Efficiency and CO2 emissions for Future Aircraft Scenarios
 ### [Tools](database/tools)
-The tools folder contains some additionally helpful files, such as plotting properties or dictionaries to match the aircraft names from the different sources.
+The tools folder contains some additionally helpful files, such as plotting properties, calculating the atmospheric conditions or dictionaries to match the aircraft names from the different sources.
 
 ## [Dashboard](./dashboard)
-All the input files for the dashboard are generated during the modelling pipeline and will be directly saved in this folder. To generate the dashboard, the
+All the input files for the dashboard are generated during the modelling pipeline and will be directly saved in this folder. Next these changes need to be pushed into the GitHub Repository. The Data from the Github Repo is used in order to be independent of local imports.
+To generate the dashboard, the
 [main_db.ipynb](dashboard/main_db.ipynb) file should be executed in Jupyter Notebook. 
 
 The Dashboard contains the following sites: 

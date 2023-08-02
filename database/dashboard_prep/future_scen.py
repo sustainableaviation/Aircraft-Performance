@@ -272,12 +272,12 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
     # Add a subplot
     ax = fig.add_subplot(1, 1, 1)
 
-    ax.plot(techlimit['Year'], techlimit['EU (MJ/ASK)'], color='blue', label='TW Tech Limit')
-    ax.plot(advancedtw['Year'], advancedtw['EU (MJ/ASK)'], color='purple', label='Advanced TW')
     ax.plot(bwb['Year'], bwb['EU (MJ/ASK)'], color='green', label='Blended Wing Body')
-    ax.plot(doublebubble['Year'], doublebubble['EU (MJ/ASK)'], color='grey', label='Double Bubble D8')
-    ax.plot(ttwb['Year'], ttwb['EU (MJ/ASK)'], color='pink', label='Strut-Braced Wing')
-    ax.plot(techfreeze['Year'],techfreeze['EU (MJ/ASK)'],color='red', label= 'TW Tech Freeze', zorder=2)
+    ax.plot(doublebubble['Year'], doublebubble['EU (MJ/ASK)'], color='blueviolet', label='Double Bubble D8')
+    ax.plot(ttwb['Year'], ttwb['EU (MJ/ASK)'], color='dodgerblue', label='Strut-Braced Wing')
+    ax.plot(advancedtw['Year'], advancedtw['EU (MJ/ASK)'], color='orangered', label='TW Advanced')
+    ax.plot(techlimit['Year'], techlimit['EU (MJ/ASK)'], color='darkred', label='TW Tech Limit')
+    ax.plot(techfreeze['Year'],techfreeze['EU (MJ/ASK)'],color='orange', label= 'TW Tech Freeze', zorder=2)
     ax.legend()
     ylabel = 'Energy Usage (MJ/ASK)'
     xlabel = 'Year'
@@ -343,3 +343,90 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
 
     if savefig:
         plt.savefig(folder_path+'/ovrfleetage.png')
+
+
+    # Plot Fleet Integration
+    years = np.arange(2022, 2051)
+    data_dict = {'Year': years, 'Freeze': s_techfreeze}
+    freeze = pd.DataFrame(data_dict)
+    data_dict = {'Year': x_ttwb, 'Strut-Braced Wings': s_ttwb}
+    ttbw = pd.DataFrame(data_dict)
+    data_dict = {'Year': x_techlimit, 'TW Tech Limit': s_techlimit}
+    limit = pd.DataFrame(data_dict)
+    data_dict = {'Year': x_bwb, 'Blended Wing Body': s_bwb}
+    bwb = pd.DataFrame(data_dict)
+    data_dict = {'Year': x_advancedtw, 'TW Advanced': s_advancedtw}
+    advancedtw = pd.DataFrame(data_dict)
+    data_dict = {'Year': x_doublebubble, 'Double Bubble D8': s_doublebubble}
+    d8 = pd.DataFrame(data_dict)
+
+
+
+    total = freeze.merge(ttbw, on='Year', how='outer')
+    total = total.merge(d8, on='Year', how='outer')
+    total = total.merge(advancedtw, on='Year', how='outer')
+    total = total.merge(bwb, on='Year', how='outer')
+    total = total.merge(limit, on='Year', how='outer')
+
+    total.loc[total["Year"] < 2040] = total.loc[total["Year"] < 2040].fillna(0)
+    total.loc[total["Year"] >= 2040] = total.loc[total["Year"] >= 2040].fillna(1)
+    colors = ["dodgerblue", "orangered", "green", "darkred", "blueviolet"]
+
+    fig, axs = plt.subplots(2, 3, figsize=(12, 8))
+    plt.subplots_adjust(hspace=0.4)
+    axs = axs.flatten()
+    scenarios = ["Strut-Braced Wings", "TW Advanced", "Blended Wing Body", "TW Tech Limit", "Double Bubble D8"]
+    # Plot "freeze" and one of the other scenarios on each subplot
+    for i in range(5):
+        axs[i].plot(total["Year"], total["Freeze"], color="orange")
+        axs[i].plot(total["Year"], total[scenarios[i]], label=scenarios[i], color=colors[i])
+
+        # Fill the area below the curves
+        axs[i].fill_between(total["Year"], total['Freeze'], y2=1, color='moccasin', label='Current Fleet')
+        axs[i].fill_between(total["Year"], total["Freeze"], color='orange', label='Current Best Aircraft')
+        axs[i].fill_between(total["Year"], total[scenarios[i]], color=colors[i])
+
+        axs[i].set_xlabel("Year")
+        axs[i].set_ylabel("Market Share")
+        axs[i].set_title(f"{scenarios[i]}")
+        axs[i].grid(True)
+        axs[i].minorticks_on()
+        axs[i].tick_params(axis='x', which='both', bottom=False)
+        axs[i].tick_params(axis='y', which='both', bottom=False)
+
+        # GRIDS ######################
+
+        axs[i].grid(which='both', axis='y', linestyle='-', linewidth=0.5)
+        axs[i].grid(which='both', axis='x', linestyle='-', linewidth=0.5)
+    # Remove the sixth subplot (bottom right corner)
+    axs[-1].axis("off")
+    # Add labels for all scenarios together in the sixth subplot space
+    combined_labels = ["Current Tech"] + ["Tech Freeze"] + scenarios
+
+    # Define colors for labels
+    current_tech_color = "moccasin"
+    tech_freeze_color = "orange"
+
+    # Set the vertical spacing between labels
+    label_spacing = 0.12
+
+    # Add labels and rectangles
+    for i, label in enumerate(combined_labels):
+        color = current_tech_color if label == "Current Tech" else tech_freeze_color if label == "Tech Freeze" else colors[i - 2]
+        axs[-1].add_patch(plt.Rectangle((0, 0.85 - i * label_spacing), 0.04, 0.05, color=color))
+        axs[-1].text(0.06, 0.88 - i * label_spacing, label, fontsize=10, ha="left", va="center")
+
+
+    plt.rcParams.update({
+        "text.usetex": True,
+        "font.family": "Arial",
+        'font.size': 10})
+
+
+    if savefig:
+        plt.savefig(folder_path+'/fleetintegrationplot.png')
+
+
+
+
+
