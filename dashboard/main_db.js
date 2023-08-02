@@ -50,9 +50,10 @@ init_doc()
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[28]:
+# In[1]:
 
 
+# Import Packages
 import panel as pn
 import pandas as pd
 import numpy as np
@@ -80,10 +81,11 @@ pn.extension(design='material')
 
 # # Authors
 
-# In[9]:
+# In[2]:
 
 
 def about_authors(): 
+    # Create Photo and text for Philipp
     philipp = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/Philipp.JPG'
     pic1 = pn.pane.JPG(philipp, width=150, height=200)
     text1 = """
@@ -96,6 +98,7 @@ def about_authors():
     - Bachelor: Mech. Engineering, ETH Zurich, 2018-2021
     
     """
+    # Create Photo and text for Michael
     michael = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/michael.png'
     pic2 = pn.pane.PNG(michael, width=150, height=200)
     text2 = """
@@ -109,7 +112,7 @@ def about_authors():
     - Bachelor: Engineering Physics, TU Vienna, 2014-2018
     
     """
-
+    # Format for Dashboard page
     philipp = pn.Column('# Philipp Rohrer', pn.layout.Divider(sizing_mode='stretch_width'), pic1, text1,  width=400,)
     michael = pn.Column('# Michael Weinold', pn.layout.Divider(sizing_mode='stretch_width'),pic2, text2,  width=400,)
     dashboard = pn.Row(philipp, michael)
@@ -118,12 +121,15 @@ def about_authors():
 
 # # Data
 
-# In[10]:
+# In[3]:
 
 
 def data(): 
+    # Get Databank of Aircraft Data from GitHub
     databank = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/Databank.xlsx'
     databank = pd.read_excel(databank)
+    
+    # Write Text for Explanation
     text = """
     In the following Table the values for each sub-efficiency (Overall, Engine, Aerodynamic, Structural) for the 72 
     investigated aircraft will be shown. For some aircraft, not all sub-efficiencies could have been determined. 
@@ -135,17 +141,22 @@ def data():
     - Structural Efficiency was calculated using Data from <a href="https://www.easa.europa.eu/en/document-library/type-certificates">Type Certificate Data Sheets</a> and <a href="https://shop.janes.com/all-the-world-s-aircraft-unmanned-23-24-yearbook-6541-3000230012">Jane's All the World's Aircraft</a>. 
     """
     
+    # Filter for the relevant sub-efficiency data, sort by year and round values
     data = databank[['Company', 'Name', 'YOI','EU (MJ/ASK)', 'TSFC Cruise',  'L/D estimate','OEW/Exit Limit']]
     data.set_index('YOI', inplace=True)
     columns_to_round = ['EU (MJ/ASK)', 'TSFC Cruise', 'L/D estimate', 'OEW/Exit Limit']
     data[columns_to_round] = data[columns_to_round].apply(pd.to_numeric)
     data[columns_to_round] = data[columns_to_round].round(2)
     data.sort_index(inplace=True)
+    
+    # Create a header and fill nan values with empty space
     header1 = ['', '', 'Overall Eff.', 'Engine Eff.', 'Aerodyn. Eff.', 'Structural Eff.']
     header2 = ['Company', 'Model', 'EU (MJ/ASK)', 'TSFC Cruise', 'L/D', 'OEW/Exit Limit']
     columns = pd.MultiIndex.from_arrays([header1, header2])
     data.columns = columns
     data = data.fillna('')
+    
+    # Formate for Dashboard
     data = pn.pane.DataFrame(data, width=1100, height=400, scroll=True)
     data = pn.Column('# Aircraft Efficiencies', text,pn.layout.Divider(), data)
 
@@ -156,15 +167,18 @@ def data():
 
 # # Future
 
-# In[49]:
+# In[4]:
 
 
 def create_db1(): 
+    
+    # Function to request Excel Files from Github
     def read_excel_from_github(url):
         response = requests.get(url)
         if response.status_code == 200:
             return pd.read_excel(BytesIO(response.content))
     
+    # Create a line and text for explanation
     line = pn.layout.Divider(sizing_mode='stretch_width')
     text = """
     <div style="max-width: 600px">
@@ -180,7 +194,6 @@ def create_db1():
     """
     
     #Load Files from Github. 
-    
     freeze = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/techfreeze.xlsx'
     freeze = read_excel_from_github(freeze)
     limit = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/techlimit.xlsx'
@@ -229,7 +242,8 @@ def create_db1():
 
     # Create the Bokeh figure
     def plot(selected_targets, growth_rate, target, selected_tech,freeze, limit, bwb, ttbw, advancedtw, doublebubble, slf, atm):
-
+        
+        # Based on the Growth Rate, calculate future RPK
         target.loc[target['Year'] == 2023, 'Billion RPK'] = target.loc[target['Year'] == 2019, 'Billion RPK'].values[0]
         for year in range(2024, 2051):
             previous_year = year - 1
@@ -240,10 +254,13 @@ def create_db1():
 
         # Multiply 'Billion RPK' with 'CO2'
         target['ICAO Target CO2'] = target.apply(lambda row: row['Billion RPK'] * row['ICAO Target CO2/RPK'], axis=1)
-        p = figure(title=' Future Efficiency and Forecast Scenarios', x_axis_label='Year', y_axis_label='CO2 Emissions [Mt]', width=800, height=400)
+        
+        # Create Bokeh Figure
+        p = figure(title=' Future Efficiency and Forecast Scenarios', x_axis_label='Year', y_axis_label='CO2 Emissions [Mt]', width=1000, height=500)
         p.y_range.start = 0
         target = target.loc[target['Year']>=2000]
 
+        # Add CO2 Emission Targets
         if 'EC' in selected_targets:
             ec_data = target[target['EC Target CO2'].notna()]
             p.line(ec_data['Year'], ec_data['EC Target CO2'], line_color='darkred', legend_label='EC Target', line_width=3, line_dash='dashed')
@@ -254,6 +271,7 @@ def create_db1():
             icao_data = target[target['ICAO Target CO2'].notna()]
             p.line(icao_data['Year'], icao_data['ICAO Target CO2'], line_color='darkred', legend_label='ICAO Target', line_width=3, line_dash='dotdash')
 
+        # Add Technology Targets
         if 'Tech Freeze' in selected_tech:
             freeze = scale_plf(freeze, slf, atm)
             freeze = freeze.merge(target[['Year', 'Billion RPK']], on='Year')
@@ -290,6 +308,8 @@ def create_db1():
             doublebubble['EI CO2'] = doublebubble.apply(lambda row: row['Billion RPK'] * row['EI (CO2/RPK)'], axis=1)
             doublebubble = doublebubble[doublebubble['EI CO2'].notna()]
             p.line(doublebubble['Year'], doublebubble['EI CO2'], line_color='blue', legend_label='Double Bubble', line_width=3)
+        
+        # Define grid properties
         p.grid.grid_line_color = 'gray'
         p.grid.grid_line_alpha = 0.3
         p.grid.minor_grid_line_color = 'navy'
@@ -297,7 +317,7 @@ def create_db1():
 
         return p
 
-    # Create the Panel components
+    # Create the Checkboxes and Sliders, create a Layout with all Widgets together
     checkboxes = CheckboxGroup(labels=['EC', 'IATA', 'ICAO'], active=[])
     checkboxes_title = Div(text='<h4 >Forecast Scenarios</h4>')
     checkbox1= column(checkboxes_title, checkboxes)
@@ -309,8 +329,9 @@ def create_db1():
     atm_slider = Slider(title='ATM Improvements 2050 (%)', start=0, end=15, value=0, step=0.2, styles={'font-weight': 'bold'})
     slider = pn.Column(slf_slider, growth_rate_slider, atm_slider)
     checkbox = pn.Column(checkbox1, checkbox2)
-    everything = pn.Column(checkbox, slider)
+    everything = pn.Column(slider, checkbox)
 
+    # Update the plot based on the slider and checkbox values
     def update_plot(attr, old, new):
         selected_targets = [checkboxes.labels[i] for i in checkboxes.active]
         selected_tech = [checkboxes2.labels[checkboxes2.active]]
@@ -339,10 +360,12 @@ def create_db1():
 
 # # Historic
 
-# In[50]:
+# In[5]:
 
 
 def create_db2():
+    
+    # Add Text 
     line = pn.layout.Divider(sizing_mode='stretch_width')
     text = """
     <div style="max-width: 600px">
@@ -357,6 +380,8 @@ def create_db2():
     The complete code can be find in the <a href="https://github.com/sustainableaviation">GitHub Repository</a>
     </div>
     """
+    
+    # Load Data from Github and sort by Year
     ida = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/Dashboard.xlsx'
     ida = pd.read_excel(ida)
     ida = ida.set_index('YOI')
@@ -365,6 +390,7 @@ def create_db2():
     ida = ida.sort_index()
     ida = ida
 
+    # Get Columns for the technological improvements
     ida_tech = ida[['deltaC_Engine', 'deltaC_Aerodyn','deltaC_Structural', 'deltaC_Res', 'deltaC_Tot']]
     ida_tech = ida_tech.rename(columns={
         'deltaC_Engine': 'Engine',
@@ -372,6 +398,8 @@ def create_db2():
         'deltaC_Structural': 'Structural',
         'deltaC_Res': 'Residual',
         'deltaC_Tot': 'Overall'})
+    
+    # Get Columns for the technological + operational improvements
     ida_ops = ida[['deltaC_Engine_Ops', 'deltaC_Aerodyn_Ops','deltaC_Structural_Ops', 'deltaC_SLF_Ops' , 'deltaC_Res_Ops', 'deltaC_Tot_Ops']]
     ida_ops = ida_ops.rename(columns={
         'deltaC_Engine_Ops': 'Engine',
@@ -380,13 +408,21 @@ def create_db2():
         'deltaC_SLF_Ops': 'Operational',
         'deltaC_Res_Ops': 'Residual',
         'deltaC_Tot_Ops': 'Overall'})
-    # Define the plot function
+     # Define the plot function
     def plot(start_year, middle_year, end_year, df):
+        # Check which DF is used and define the colors   
         if df == "Index Decomposition Analyis":
             df = ida_tech
             colors = ["dimgrey", 'darkblue', 'royalblue', 'steelblue', 'red', 
                       "dimgrey", 'darkblue', 'royalblue', 'steelblue', 'red', 
                       "dimgrey"]
+            
+            df['Overall_1'] = 10000/(df['Overall']+100)
+            df['Total'] = df['Engine']+df['Aerodynamic']+df['Structural']+df['Residual']
+            df['Overall Inverse'] = 100 - df['Overall_1']
+            cols_to_update = ['Engine', 'Aerodynamic', 'Structural','Residual']
+            for col in cols_to_update:
+                df.loc[df.index[1:], col] = -1*(df.loc[df.index[1:], col] / df.loc[df.index[1:], 'Total']) * df.loc[df.index[1:], 'Overall Inverse']
 
         else:
             df = ida_ops
@@ -394,19 +430,29 @@ def create_db2():
                       "dimgrey", 'darkblue', 'royalblue', 'steelblue', 'lightblue', 'red',
                       "dimgrey"]
 
+
+            df['Overall_1'] = 10000/(df['Overall']+100)
+            df['Total'] = df['Engine']+df['Aerodynamic']+df['Structural']+df['Residual']+df['Operational']
+            df['Overall Inverse'] = 100 - df['Overall_1']
+            cols_to_update = ['Engine', 'Aerodynamic', 'Structural', 'Operational', 'Residual']
+            for col in cols_to_update:
+                df.loc[df.index[1:], col] = -1*(df.loc[df.index[1:], col] / df.loc[df.index[1:], 'Total']) * df.loc[df.index[1:], 'Overall Inverse']
+
+        df = df.drop(columns=['Overall Inverse', 'Total', 'Overall'])
+        # Code to create the waterfall charts with the start, middle and end year.
         df_dif_first = pd.DataFrame((df.loc[middle_year] - df.loc[start_year])).reset_index()
         df_dif_first.columns = ['Eff', 'Value']
-        df_dif_first['Offset'] = df_dif_first['Value'].cumsum() - df_dif_first['Value'] + df.loc[start_year]['Overall']
+        df_dif_first['Offset'] = df_dif_first['Value'].cumsum() - df_dif_first['Value'] + df.loc[start_year]['Overall_1']
         df_dif_first['Offset'].iloc[-1] = 0
-        df_dif_first['ValueSum'] = df_dif_first['Value'].cumsum() + df.loc[start_year]['Overall']
-        df_dif_first['ValueSum'].iloc[-1] = df_dif_first['Value'].iloc[-1] + df.loc[start_year]['Overall']
+        df_dif_first['ValueSum'] = df_dif_first['Value'].cumsum() + df.loc[start_year]['Overall_1']
+        df_dif_first['ValueSum'].iloc[-1] = df_dif_first['Value'].iloc[-1] + df.loc[start_year]['Overall_1']
 
         df_dif_second = pd.DataFrame((df.loc[end_year] - df.loc[middle_year])).reset_index()
         df_dif_second.columns = ['Eff', 'Value']
-        df_dif_second['Offset'] = df_dif_second['Value'].cumsum() - df_dif_second['Value'] + df.loc[middle_year]['Overall']
+        df_dif_second['Offset'] = df_dif_second['Value'].cumsum() - df_dif_second['Value'] + df.loc[middle_year]['Overall_1']
         df_dif_second['Offset'].iloc[-1] = 0
-        df_dif_second['ValueSum'] = df_dif_second['Value'].cumsum() + df.loc[middle_year]['Overall']
-        df_dif_second['ValueSum'].iloc[-1] = df_dif_second['Value'].iloc[-1] + df.loc[middle_year]['Overall']
+        df_dif_second['ValueSum'] = df_dif_second['Value'].cumsum() + df.loc[middle_year]['Overall_1']
+        df_dif_second['ValueSum'].iloc[-1] = df_dif_second['Value'].iloc[-1] + df.loc[middle_year]['Overall_1']
         df_dif = pd.concat([df_dif_first, df_dif_second])
 
         df_dif['Eff'] = df_dif.groupby('Eff').cumcount().astype(str).replace('0', '') + '_' + df_dif['Eff']
@@ -418,17 +464,18 @@ def create_db2():
 
         source = ColumnDataSource(df_dif)
 
-
+        # Plot the Figure
         p = figure(x_range=df_dif['Eff'], title=f"Efficiency Improvements Between {start_year} and {end_year}",
-                   x_axis_label='Timeline', y_axis_label='Efficiency Increase: Basis 1958',  width=800, height=400, )
+                   x_axis_label='Timeline', y_axis_label='Energy Usage: Basis 1958',  width=1000, height=500, )
 
         eff = 'Eff'
         ops = '_Operational'
         ops = ops in df_dif[eff].values
-
+        
+        # Define the Legend Labels based on the chosen DF.
         if ops:
             legend = Legend(items=[
-            ("Overall", [p.square([1], [1], color="dimgrey")]),
+            ("Overall", [p.square([1], [1], color="dimgey")]),
             ("Engine", [p.square([1], [1], color="darkblue")]),
             ("Aerodynamic", [p.square([1], [1], color="royalblue")]),
             ("Structural", [p.square([1], [1], color="steelblue")]),
@@ -443,18 +490,21 @@ def create_db2():
             ("Structural", [p.square([1], [1], color="steelblue")]),
             ("Residual", [p.square([1], [1], color="red")])])
 
-
+        # Plot vertical bars and legend
         p.vbar(x='Eff', top='ValueSum', width=0.9, source=source, bottom='Offset', fill_color='Color', line_color='Color')
         p.add_layout(legend, 'right')
         p.xaxis.major_label_text_font_size = "0pt"
 
-        start = Label(x=5, y=0, x_units='screen', y_units='screen', text=str(start_year), text_font_size='12pt',  text_color='black')
-        middle = Label(x=270, y=0, x_units='screen', y_units='screen', text=str(middle_year), text_font_size='12pt', text_color='black')
-        end = Label(x=530, y=0, x_units='screen', y_units='screen', text=str(end_year), text_font_size='12pt', text_color='black')
+        # Plot years as text and add to layout
+        start = Label(x=12, y=5, x_units='screen', y_units='screen', text=str(start_year), text_font_size='12pt', text_color='white', text_font_style='bold')
+        middle = Label(x=370, y=5, x_units='screen', y_units='screen', text=str(middle_year), text_font_size='12pt', text_color='white', text_font_style='bold')
+        end = Label(x=723, y=5, x_units='screen', y_units='screen', text=str(end_year), text_font_size='12pt', text_color='white', text_font_style='bold')
         p.add_layout(start)
         p.add_layout(middle)
         p.add_layout(end)
-        line = Span(location=0, dimension='width', line_color='black', line_width=3, line_dash = 'dashed')
+        line = Span(location=100, dimension='width', line_color='black', line_width=3, line_dash = 'dashed')
+        
+        # Define Grid Properties
         p.ygrid.grid_line_color = 'gray'
         p.ygrid.grid_line_alpha = 0.3
         p.ygrid.minor_grid_line_color = 'navy'
@@ -462,6 +512,8 @@ def create_db2():
         p.xgrid.grid_line_color = None
         p.xaxis.major_tick_line_color = None
         p.add_layout(line)
+        p.y_range.start = 0
+        p.y_range.end = 100
 
         return p
 
@@ -469,10 +521,12 @@ def create_db2():
     def update_plot(event):
         selected_variable = variable_widget.value
         if selected_variable == "Index Decomposition Analyis" or selected_variable == "Include Operational":
+            # Get values of chosen years
             start_year = int(start_year_widget.value)
             middle_year = int(middle_year_widget.value)
             end_year = int(end_year_widget.value)
 
+            # Make that start year must be smaller than middle year and so on.
             start_year_widget.options = [str(year) for year in range(1958, middle_year)]
             middle_year_widget.options = [str(year) for year in range(start_year + 1, end_year)]
             end_year_widget.options = [str(year) for year in range(middle_year + 1, 2021)]
@@ -489,6 +543,7 @@ def create_db2():
     # Create a selection widget
     variable_widget = pn.widgets.Select(name="Variable", options=["Index Decomposition Analyis", "Include Operational"])
 
+    # Define initial years
     start_year = 1958
     middle_year = 2000
     end_year = 2020
@@ -508,16 +563,20 @@ def create_db2():
     return dashboard
 
 
-# In[51]:
+# # Overall Efficiency
+
+# In[6]:
 
 
 def create_db3(): 
+    # Load Data from GitHub
     aircraft = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/aircraft.xlsx'
     aircraft = pd.read_excel(aircraft)
     
     lee =  'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/aircraft_lee.xlsx'
     lee = pd.read_excel(lee)
 
+    # Add text and divider Line
     line = pn.layout.Divider(sizing_mode='stretch_width')
     text = """
     <div style="max-width: 600px">
@@ -529,7 +588,7 @@ def create_db3():
     </div>
     """
     
-    #Get aircraft data
+    # Divide Aircraft Data into Regional, Normal, Data from Lee, Comet 1 and Comet 4
     regionalcarriers = ['Canadair CRJ 900','Canadair RJ-200ER /RJ-440', 'Canadair RJ-700','Embraer 190'
                            'Embraer ERJ-175', 'Embraer-135','Embraer-145']
     regional = aircraft.loc[aircraft['Description'].isin(regionalcarriers)]
@@ -538,6 +597,7 @@ def create_db3():
     comet1 = lee.loc[lee['Label'] == 'Comet 1']
     rest = lee.loc[~lee['Label'].isin(['Comet 4', 'Comet 1'])]
     
+    # Use ColumnDataSource for the Plotting and add Future Design Concepts
     comet1_source = ColumnDataSource(data=dict(year=comet1['Year'], energy=comet1['EU (MJ/ASK)'], name=comet1['Label']))
     comet4_source = ColumnDataSource(data=dict(year=comet4['Year'], energy=comet4['EU (MJ/ASK)'], name=comet4['Label']))
     normal_source = ColumnDataSource(data=dict(year=normal['YOI'], energy=normal['MJ/ASK'], name=normal['Description']))
@@ -550,7 +610,7 @@ def create_db3():
     twlimit_source = ColumnDataSource(data=dict(year=[2050], energy=[0.618628347], name=['TW Limit']))
 
     # Create the figure
-    p = figure(width=800, height=400,)
+    p = figure(width=1000, height=500,)
 
     # Scatter plots
     comet1_renderer = p.scatter('year', 'energy', source=comet1_source, marker='*', size = 10,  color='blue', legend_label='Comet 1')
@@ -581,6 +641,7 @@ def create_db3():
     p.grid.minor_grid_line_color = 'navy'
     p.grid.minor_grid_line_alpha = 0.1
     
+    # Create a HoverTool to see the data when clicking on it
     hover = HoverTool()
     hover.renderers = [comet1_renderer, comet4_renderer, normal_renderer, regional_renderer, rest_renderer, sbwing_renderer
                       , db_renderer, adv_tw_renderer, bwb_renderer, twlimit_renderer]
@@ -599,15 +660,16 @@ def create_db3():
 
 # # Create DB
 
-# In[1]:
+# In[7]:
 
 
 dashboard_container = pn.Column()
 
+# create the dashboard title and title row with the logos
 title = pn.pane.HTML("""
 <h1 style='font-size:36px;font-weight:bold;'>Aircraft Performance Analysis Tool</h1>
 """)
-# Create a logo
+# Load logos from GitHub
 psi = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/psilogo.png'
 psi = pn.pane.PNG(psi, width=150, height=100)
 esa = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/esalogo.png'
@@ -620,6 +682,7 @@ line = pn.layout.Divider(sizing_mode='stretch_width')
 # Create the row with aligned items
 header = pn.Row(title,pn.Spacer(width=100),psi,esa,eth,)
 
+# Update the Dashboard, Display the selected Dashboard
 def update_dashboard(event):
     selection_value = event.new
     if selection_value == 'Forecast':
@@ -641,6 +704,7 @@ def update_dashboard(event):
 dashboard = create_db1()
 dashboard_container.append(dashboard)
 
+# Show the selection of Dashboards
 selection = pn.widgets.RadioButtonGroup(options=['Forecast', 'Historic Efficiency Decomposition', 'Overall Efficiency Improvements','Data', 'Author'], name='Select Dashboard', value='Forecast')
 selection.param.watch(update_dashboard, 'value')
 

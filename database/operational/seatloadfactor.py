@@ -14,8 +14,9 @@ def calculate(savefig, folder_path):
     #Load Data, T2 is data from the US back to 1990, Historic_Slf contains data from the ICAO worldwide back to 1950
     T2 = pd.read_csv(r"database\rawdata\USDOT\T_SCHEDULE_T2.csv")
     AC_types = pd.read_csv(r"database\rawdata\USDOT\L_AIRCRAFT_TYPE (1).csv")
-    historic_slf = pd.read_excel(r"database\rawdata\USDOT\Traffic and Operations 1929-Present_Vollständige D_data.xlsx")
-    historic_slf = historic_slf.dropna(subset='PLF').reset_index()
+    historic = pd.read_excel(r"database\rawdata\USDOT\Traffic and Operations 1929-Present_Vollständige D_data.xlsx")
+    historic_slf = historic.dropna(subset='PLF').reset_index()
+    historic_rpk = historic.dropna(subset= 'RPKs (mils)').reset_index()
     historic_slf['PLF'] = historic_slf['PLF'].str.replace(',', '.').astype(float)
 
     # Preprocess Data from Schedule T2
@@ -69,3 +70,20 @@ def calculate(savefig, folder_path):
     plot.plot_layout(None, x_label, y_label, ax)
     if savefig:
         plt.savefig(folder_path+'/airborneefficiency.png')
+
+    # Figure for historic RPK
+    fig = plt.figure(dpi=300, figsize=(10,4))
+
+    # Add a subplot
+    ax = fig.add_subplot(1, 1, 1)
+    x_label = 'Year'
+    y_label = 'Trillion RPK'
+
+    ax.plot(historic_rpk['Year'], historic_rpk['RPKs (mils)']/1000000,color='black',marker='*', label='Trillion RPK')
+    plt.ylim(bottom=0)
+    plt.xlim(1970, 2023)
+    plt.xticks(np.arange(1970, 2024, 10))
+
+    plot.plot_layout(None, x_label, y_label, ax)
+    if savefig:
+        plt.savefig(folder_path+'/historicrpk.png', bbox_inches='tight')

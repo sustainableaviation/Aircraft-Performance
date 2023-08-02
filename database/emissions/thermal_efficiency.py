@@ -83,7 +83,7 @@ def calculate(savefig, folder_path, temp):
     # Same with a intercooling
 
     # Parameters
-    T1 = 233  # Kelvin, Air Temperature in Altitude
+    T1 = temp  # Kelvin, Air Temperature in Altitude
     T3 = 320
     T5_NOx = 2000  # Max Temp in Kelvin regarding NOx emissions
     T5s = np.linspace(1000, 2600, 1600)
@@ -132,7 +132,7 @@ def calculate(savefig, folder_path, temp):
 
     # Plot the array as a heatmap using imshow
     im = ax.imshow(data[::-1], cmap='viridis', aspect='auto', vmin=0.4, vmax=0.625)
-    contours = plt.contour(data[::-1], colors='black', linestyles='dashed', levels=10)
+    contours = plt.contour(data[::-1], colors='black', linestyles='dashed', levels=11)
     plt.clabel(contours, inline=True, fontsize=10)
     plt.colorbar(im, label='Thermal Efficiency [\%]')
 

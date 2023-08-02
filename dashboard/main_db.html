@@ -51,8 +51,7 @@
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=");
   background-size: auto calc(min(50%, 400px));
 }
-</style><script src="https://cdn.jsdelivr.net/pyodide/v0.23.0/full/pyodide.js"></script>
-<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-3.1.1.min.js"></script>
+</style><script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-3.1.1.min.js"></script>
 <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-gl-3.1.1.min.js"></script>
 <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.1.1.min.js"></script>
 <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.1.1.min.js"></script>
@@ -63,724 +62,101 @@
   Bokeh.set_log_level("info");
 </script>  </head>
   <body class="pn-loading arc">
-    <div id="e8b4fa78-1b40-42ce-b732-3a935b6d9f86" data-root-id="p1068" style="display: contents;"></div>
-  <div id="a50ec801-6033-42c9-aaa1-ea13b36fb182" data-root-id="p1186" style="display: contents;"></div>
-  <div id="a6951b9f-03ac-40fd-9b41-7db445fb5953" data-root-id="p1200" style="display: contents;"></div>
+    <div id="a9f9f96d-6019-4cb1-b972-99fc884bc945" data-root-id="p1068" style="display: contents;"></div>
+  <div id="b0576836-0b9a-4ef2-808d-cd5d8ec8625b" data-root-id="p1186" style="display: contents;"></div>
+  <div id="dd498ae2-5319-4b78-8246-3e298875d42f" data-root-id="p1200" style="display: contents;"></div>
   
     <script type="text/javascript">
-    async function main() {
-      let pyodide = await loadPyodide();
-      await pyodide.loadPackage("micropip");
-      await pyodide.runPythonAsync(`
-        import micropip
-        await micropip.install(['https://cdn.holoviz.org/panel/1.0.2/dist/wheels/bokeh-3.1.1-py3-none-any.whl', 'https://cdn.holoviz.org/panel/1.0.2/dist/wheels/panel-1.0.2-py3-none-any.whl', 'pyodide-http==0.2.1', 'PIL', 'numpy', 'openpyxl', 'pandas', 'requests']);
-      `);
-      code = `
-    import asyncio
-
-    from panel.io.pyodide import init_doc, write_doc
-
-    init_doc()
-
-    #!/usr/bin/env python
-    # coding: utf-8
-
-    # In[1]:
-
-
-    import panel as pn
-    import pandas as pd
-    import numpy as np
-    from bokeh.io import show
-    from bokeh.plotting import figure
-    from bokeh.models import ColumnDataSource, RadioButtonGroup, CustomJS, Label, Span, MultiLine, Text, HoverTool
-    from bokeh.models import CheckboxGroup, Legend, Div, RadioGroup, SingleIntervalTicker, FixedTicker, LegendItem
-    from bokeh.transform import dodge
-    from bokeh.transform import cumsum
-    from bokeh.models import FactorRange, Select, Slider
-    from bokeh.palettes import Category10
-    from bokeh.transform import factor_cmap
-    from bokeh.palettes import Blues
-    from bokeh.layouts import column
-    from bokeh.layouts import row
-    import warnings 
-    import requests
-    import openpyxl
-    from io import BytesIO
-    from PIL import Image
-    warnings.filterwarnings("ignore")
-
-    pn.extension(design='material')
-
-
-    # # Authors
-
-    # In[2]:
-
-
-    def about_authors(): 
-        philipp = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/Philipp.JPG'
-        pic1 = pn.pane.JPG(philipp, width=150, height=200)
-        text1 = """
-        The best student 
-        
-        Philipp is enrolled as a Masters Student in the Department of Mechanical and Process Engineering of ETH Zurich. This Dashboard was created as part of his Masters Thesis under the supervision of Michael Weinold and Prof. Russell McKenna. 
-        
-        Education: 
-        - Master: Mech. Engineering, ETH Zurich, 2021-2023
-        - Bachelor: Mech. Engineering, ETH Zurich, 2018-2021
-        
-        """
-        michael = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/michael.png'
-        pic2 = pn.pane.PNG(michael, width=150, height=200)
-        text2 = """
-        The best supervisor 
-        
-        Michael is a doctoral researcher in the Group for Technology Assessment under the supervision of Dr. Chris Mutel and Dr. Romain Sacchi at the Paul Scherrer Institute and Prof. Russell McKenna in the Department of Mechanical and Process Engineering of ETH Zurich.
-        
-        Education: 
-        - PhD: Life-Cycle Assessment for Sustainable Aviation, PSI/ETH Zurich, 2022-ongoing
-        - Master: Physics, ETH Zurich, 2018-2020
-        - Bachelor: Engineering Physics, TU Vienna, 2014-2018
-        
-        """
-
-        philipp = pn.Column('# Philipp Rohrer', pn.layout.Divider(sizing_mode='stretch_width'), pic1, text1,  width=400,)
-        michael = pn.Column('# Michael Weinold', pn.layout.Divider(sizing_mode='stretch_width'),pic2, text2,  width=400,)
-        dashboard = pn.Row(philipp, michael)
-        return dashboard
-
-
-    # # Data
-
-    # In[3]:
-
-
-    def data(): 
-        databank = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/Databank.xlsx'
-        databank = pd.read_excel(databank)
-        text = """
-        In the following Table the values for each sub-efficiency (Overall, Engine, Aerodynamic, Structural) for the 72 
-        investigated aircraft will be shown. For some aircraft, not all sub-efficiencies could have been determined. 
-        
-        - Overall Efficiency was calculated using Data from the <a href="https://www.transtats.bts.gov/DL_SelectFields.aspx?gnoyr_VQ=FIH&QO_fu146_anzr=Nv4+Pn44vr4+f7zzn4B">US DOT</a> and <a href="https://www.annualreviews.org/doi/10.1146/annurev.energy.26.1.167">Lee et al.</a>. 
-        - Engine Efficiency was calculated using Data from the <a href="https://www.easa.europa.eu/en/domains/environment/icao-aircraft-engine-emissions-databank">ICAO Emissions Databank</a>, <a href="https://www.annualreviews.org/doi/10.1146/annurev.energy.26.1.167">Lee et al.</a> and several sources for a TSFC T/O to 
-        TSFC Cruise calibration
-        - Aerodynamic Efficiency was calculated using Data from the Engine Efficiency and <a href="https://www.boeing.com/commercial/airports/plan_manuals.page">Airplane Characteristics for Airport Planning</a> to solve the Breguet Range Equation
-        - Structural Efficiency was calculated using Data from <a href="https://www.easa.europa.eu/en/document-library/type-certificates">Type Certificate Data Sheets</a> and <a href="https://shop.janes.com/all-the-world-s-aircraft-unmanned-23-24-yearbook-6541-3000230012">Jane's All the World's Aircraft</a>. 
-        """
-        
-        data = databank[['Company', 'Name', 'YOI','EU (MJ/ASK)', 'TSFC Cruise',  'L/D estimate','OEW/Exit Limit']]
-        data.set_index('YOI', inplace=True)
-        columns_to_round = ['EU (MJ/ASK)', 'TSFC Cruise', 'L/D estimate', 'OEW/Exit Limit']
-        data[columns_to_round] = data[columns_to_round].apply(pd.to_numeric)
-        data[columns_to_round] = data[columns_to_round].round(2)
-        data.sort_index(inplace=True)
-        header1 = ['', '', 'Overall Eff.', 'Engine Eff.', 'Aerodyn. Eff.', 'Structural Eff.']
-        header2 = ['Company', 'Model', 'EU (MJ/ASK)', 'TSFC Cruise', 'L/D', 'OEW/Exit Limit']
-        columns = pd.MultiIndex.from_arrays([header1, header2])
-        data.columns = columns
-        data = data.fillna('')
-        data = pn.pane.DataFrame(data, width=1100, height=400, scroll=True)
-        data = pn.Column('# Aircraft Efficiencies', text,pn.layout.Divider(), data)
-
-        dashboard = pn.Row(data)
-
-        return dashboard
-
-
-    # # Future
-
-    # In[4]:
-
-
-    def create_db1(): 
-        def read_excel_from_github(url):
-            response = requests.get(url)
-            if response.status_code == 200:
-                return pd.read_excel(BytesIO(response.content))
-        
-        line = pn.layout.Divider(sizing_mode='stretch_width')
-        text = """
-        <div style="max-width: 600px">
-        The Dashboard displays future trajectories for efficiency improvements, specifically focusing on various design concepts. These concepts' efficiency improvements are assessed based on customizable parameters: seat load factor, air traffic management enhancements, and the annual growth rate for passenger air transport.
-
-        Once a scenario is chosen, the Dashboard will calculate the corresponding CO2 emissions and compare them to the CO2 reduction targets set by IATA, ICAO, and Eurocontrol. This comparison will help gauge the effectiveness of the efficiency improvements in meeting the industry's environmental goals.
-        
-        - EC Target: 75% Reduction in Net CO2 Emissions until 2050 (Baseline 2011)
-        - IATA Target: 50% Reduction in Net CO2 Emissions until 2050 (Baseline 2005)
-        - ICAO Target: 60% Reduction in CO2/RPK until 2050 (Baseline 2005)
-        
-        </div>
-        """
-        
-        #Load Files from Github. 
-        
-        freeze = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/techfreeze.xlsx'
-        freeze = read_excel_from_github(freeze)
-        limit = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/techlimit.xlsx'
-        limit = read_excel_from_github(limit)
-        bwb = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/bwb.xlsx'
-        bwb = read_excel_from_github(bwb)
-        advancedtw = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/advancedtw.xlsx'
-        advancedtw = read_excel_from_github(advancedtw)
-        doublebubble = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/doublebubble.xlsx'
-        doublebubble = read_excel_from_github(doublebubble)
-        ttbw = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/ttwb.xlsx'
-        ttbw = read_excel_from_github(ttbw)
-        target = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/target.xlsx'
-        target = read_excel_from_github(target)
-
-        # Define the initial growth rate and limits
-        initial_growth_rate = 2
-        initial_slf = 90
-        initial_atm = 0
-
-        def scale_plf(df, slf, atm):
-            # Extract the PLF column and the corresponding years
-            years = df['Year']
-            plf = df['PLF']
-            start_index = years[years == 2022].index[0]
-
-            # Scale PLF values after 2022
-            scaled_plf = np.interp(years, [2022, 2050], [plf[start_index], slf/100])
-            df['PLF'] = np.where(years >= 2022, scaled_plf, plf)
-
-            # Update other columns
-            df['EI (MJ/RPK)'] = df['EU (MJ/ASK)'] / df['PLF']
-            
-            # Add ATM Improvements
-            eu_at_2022 = df['EI (MJ/RPK)'][start_index]
-            eu_at_2050 = df['EI (MJ/RPK)'][years == 2050].values[0]
-            scaling_factors = [(1 - (atm / 100) * (i - 2022) / (2050 - 2022)) for i in years]
-            df['EI (MJ/RPK)'] *= np.where(years >= 2022, scaling_factors, 1)
-
-            #df['EI (MJ/RPK)'] = np.where(years >= 2022, scaled_atm, eu)
-            
-            # Convert to CO2 emissions
-            mj_to_co2 = 3.16 / 43.15 
-            df['EI (CO2/RPK)'] = mj_to_co2 * df['EI (MJ/RPK)']
-            return df
-
-        # Create the Bokeh figure
-        def plot(selected_targets, growth_rate, target, selected_tech,freeze, limit, bwb, ttbw, advancedtw, doublebubble, slf, atm):
-
-            target.loc[target['Year'] == 2023, 'Billion RPK'] = target.loc[target['Year'] == 2019, 'Billion RPK'].values[0]
-            for year in range(2024, 2051):
-                previous_year = year - 1
-                previous_value = target.loc[target['Year'] == previous_year, 'Billion RPK'].values[0]
-                new_value = previous_value * (1 + growth_rate/100)
-                target.loc[target['Year'] == year, 'Billion RPK'] = new_value
-
-
-            # Multiply 'Billion RPK' with 'CO2'
-            target['ICAO Target CO2'] = target.apply(lambda row: row['Billion RPK'] * row['ICAO Target CO2/RPK'], axis=1)
-            p = figure(title=' Future Efficiency and Forecast Scenarios', x_axis_label='Year', y_axis_label='CO2 Emissions [Mt]', width=800, height=400)
-            p.y_range.start = 0
-            target = target.loc[target['Year']>=2000]
-
-            if 'EC' in selected_targets:
-                ec_data = target[target['EC Target CO2'].notna()]
-                p.line(ec_data['Year'], ec_data['EC Target CO2'], line_color='darkred', legend_label='EC Target', line_width=3, line_dash='dashed')
-            if 'IATA' in selected_targets:
-                iata_data = target[target['IATA Target CO2'].notna()]
-                p.line(iata_data['Year'], iata_data['IATA Target CO2'], line_color='darkred', legend_label='IATA Target', line_width=3, line_dash='dotted')
-            if 'ICAO' in selected_targets:
-                icao_data = target[target['ICAO Target CO2'].notna()]
-                p.line(icao_data['Year'], icao_data['ICAO Target CO2'], line_color='darkred', legend_label='ICAO Target', line_width=3, line_dash='dotdash')
-
-            if 'Tech Freeze' in selected_tech:
-                freeze = scale_plf(freeze, slf, atm)
-                freeze = freeze.merge(target[['Year', 'Billion RPK']], on='Year')
-                freeze['EI CO2'] = freeze.apply(lambda row: row['Billion RPK'] * row['EI (CO2/RPK)'], axis=1)
-                freeze = freeze[freeze['EI CO2'].notna()]
-                p.line(freeze['Year'], freeze['EI CO2'], line_color='blue', legend_label='Tech Freeze', line_width=3)
-            if 'TW Limit' in selected_tech:
-                limit = scale_plf(limit, slf, atm)
-                limit = limit.merge(target[['Year', 'Billion RPK']], on='Year')
-                limit['EI CO2'] = limit.apply(lambda row: row['Billion RPK'] * row['EI (CO2/RPK)'], axis=1)
-                limit = limit[limit['EI CO2'].notna()]
-                p.line(limit['Year'], limit['EI CO2'], line_color='blue', legend_label='TW Limit', line_width=3)
-            if 'BWB' in selected_tech:
-                bwb = scale_plf(bwb, slf, atm)
-                bwb = bwb.merge(target[['Year', 'Billion RPK']], on='Year')
-                bwb['EI CO2'] = bwb.apply(lambda row: row['Billion RPK'] * row['EI (CO2/RPK)'], axis=1)
-                bwb = bwb[bwb['EI CO2'].notna()]
-                p.line(bwb['Year'], bwb['EI CO2'], line_color='blue', legend_label='BWB', line_width=3)
-            if 'Advanced TW' in selected_tech:
-                advancedtw = scale_plf(advancedtw, slf, atm)
-                advancedtw = advancedtw.merge(target[['Year', 'Billion RPK']], on='Year')
-                advancedtw['EI CO2'] = advancedtw.apply(lambda row: row['Billion RPK'] * row['EI (CO2/RPK)'], axis=1)
-                advancedtw = advancedtw[advancedtw['EI CO2'].notna()]
-                p.line(advancedtw['Year'], advancedtw['EI CO2'], line_color='blue', legend_label='Advanced TW', line_width=3)
-            if 'TTBW' in selected_tech:
-                ttbw = scale_plf(ttbw, slf, atm)
-                ttbw = ttbw.merge(target[['Year', 'Billion RPK']], on='Year')
-                ttbw['EI CO2'] = ttbw.apply(lambda row: row['Billion RPK'] * row['EI (CO2/RPK)'], axis=1)
-                ttbw = ttbw[ttbw['EI CO2'].notna()]
-                p.line(ttbw['Year'], ttbw['EI CO2'], line_color='blue', legend_label='TTBW', line_width=3)
-            if 'Double Bubble' in selected_tech:
-                doublebubble = scale_plf(doublebubble, slf, atm)
-                doublebubble = doublebubble.merge(target[['Year', 'Billion RPK']], on='Year')
-                doublebubble['EI CO2'] = doublebubble.apply(lambda row: row['Billion RPK'] * row['EI (CO2/RPK)'], axis=1)
-                doublebubble = doublebubble[doublebubble['EI CO2'].notna()]
-                p.line(doublebubble['Year'], doublebubble['EI CO2'], line_color='blue', legend_label='Double Bubble', line_width=3)
-            p.grid.grid_line_color = 'gray'
-            p.grid.grid_line_alpha = 0.3
-            p.grid.minor_grid_line_color = 'navy'
-            p.grid.minor_grid_line_alpha = 0.1
-
-            return p
-
-        # Create the Panel components
-        checkboxes = CheckboxGroup(labels=['EC', 'IATA', 'ICAO'], active=[])
-        checkboxes_title = Div(text='<h4 >Forecast Scenarios</h4>')
-        checkbox1= column(checkboxes_title, checkboxes)
-        checkboxes2 = RadioGroup(labels=['Tech Freeze', 'TW Limit', 'BWB', 'Advanced TW', 'TTBW', 'Double Bubble'], active=0)
-        checkboxes2_title = Div(text='<h4>Future Technologies</h4>')
-        checkbox2 = column(checkboxes2_title, checkboxes2)
-        growth_rate_slider = Slider(title='Annual Growth Rate (%)', start=0, end=5, value=2, step=0.1, styles={'font-weight': 'bold'})
-        slf_slider = Slider(title='Seat Load Factor 2050 (%)', start=80, end=100, value=90, step=0.5, styles={'font-weight': 'bold'})
-        atm_slider = Slider(title='ATM Improvements 2050 (%)', start=0, end=15, value=0, step=0.2, styles={'font-weight': 'bold'})
-        slider = pn.Column(slf_slider, growth_rate_slider, atm_slider)
-        checkbox = pn.Column(checkbox1, checkbox2)
-        everything = pn.Column(checkbox, slider)
-
-        def update_plot(attr, old, new):
-            selected_targets = [checkboxes.labels[i] for i in checkboxes.active]
-            selected_tech = [checkboxes2.labels[checkboxes2.active]]
-
-            growth_rate = growth_rate_slider.value
-            slf = slf_slider.value
-            atm = atm_slider.value
-            p = plot(selected_targets, growth_rate, target, selected_tech, freeze, limit, bwb, ttbw, advancedtw, doublebubble, slf, atm)
-            dashboard[-1][0] = p  # Assign the updated plot to the correct position
-
-        # Link the callback functions to the components
-        checkboxes.on_change('active', update_plot)
-        checkboxes2.on_change('active', update_plot)
-        growth_rate_slider.on_change('value', update_plot)
-        slf_slider.on_change('value', update_plot)
-        atm_slider.on_change('value', update_plot)
-        
-        # Create the initial plot
-        p = plot([], initial_growth_rate, target, ['Tech Freeze'], freeze, limit, bwb, ttbw, advancedtw, doublebubble, initial_slf, initial_atm)
-
-        # Create the Panel layout
-        dashboard = pn.Column(text, line, pn.Row(p, everything))
-        
-        return dashboard
-
-
-    # # Historic
-
-    # In[5]:
-
-
-    def create_db2():
-        line = pn.layout.Divider(sizing_mode='stretch_width')
-        text = """
-        <div style="max-width: 600px">
-        This dashboard presents a comprehensive overview of historical efficiency improvements made in the commercial aircraft industry. The dataset spans from the introduction of the De Havilland DH.106 Comet 4 in 1958 to the latest Boeing 787-10 Dreamliner.
-
-        To analyze the trajectories of various sub-efficiencies, fourth-order polynomials were used for fitting. Furthermore, an Index Decomposition Analysis was conducted for these polynomials. The analysis covered two aspects:
-
-        - Technological Improvements: This includes advancements in engine technology, structural design, and aerodynamics.
-        
-        - Technological Improvements and Operational Improvements: This category encompasses the combined impact of technological advancements and operational enhancements, specifically related to passenger load factor (SLF).
-        
-        The complete code can be find in the <a href="https://github.com/sustainableaviation">GitHub Repository</a>
-        </div>
-        """
-        ida = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/Dashboard.xlsx'
-        ida = pd.read_excel(ida)
-        ida = ida.set_index('YOI')
-        initial = pd.Series([0]*len(ida.columns), name=1958)
-        ida.loc[1958] = 0
-        ida = ida.sort_index()
-        ida = ida
-
-        ida_tech = ida[['deltaC_Engine', 'deltaC_Aerodyn','deltaC_Structural', 'deltaC_Res', 'deltaC_Tot']]
-        ida_tech = ida_tech.rename(columns={
-            'deltaC_Engine': 'Engine',
-            'deltaC_Aerodyn': 'Aerodynamic',
-            'deltaC_Structural': 'Structural',
-            'deltaC_Res': 'Residual',
-            'deltaC_Tot': 'Overall'})
-        ida_ops = ida[['deltaC_Engine_Ops', 'deltaC_Aerodyn_Ops','deltaC_Structural_Ops', 'deltaC_SLF_Ops' , 'deltaC_Res_Ops', 'deltaC_Tot_Ops']]
-        ida_ops = ida_ops.rename(columns={
-            'deltaC_Engine_Ops': 'Engine',
-            'deltaC_Aerodyn_Ops': 'Aerodynamic',
-            'deltaC_Structural_Ops': 'Structural',
-            'deltaC_SLF_Ops': 'Operational',
-            'deltaC_Res_Ops': 'Residual',
-            'deltaC_Tot_Ops': 'Overall'})
-        # Define the plot function
-        def plot(start_year, middle_year, end_year, df):
-            if df == "Index Decomposition Analyis":
-                df = ida_tech
-                colors = ["dimgrey", 'darkblue', 'royalblue', 'steelblue', 'red', 
-                          "dimgrey", 'darkblue', 'royalblue', 'steelblue', 'red', 
-                          "dimgrey"]
-
-            else:
-                df = ida_ops
-                colors = ["dimgrey", 'darkblue', 'royalblue', 'steelblue', 'lightblue', 'red',
-                          "dimgrey", 'darkblue', 'royalblue', 'steelblue', 'lightblue', 'red',
-                          "dimgrey"]
-
-            df_dif_first = pd.DataFrame((df.loc[middle_year] - df.loc[start_year])).reset_index()
-            df_dif_first.columns = ['Eff', 'Value']
-            df_dif_first['Offset'] = df_dif_first['Value'].cumsum() - df_dif_first['Value'] + df.loc[start_year]['Overall']
-            df_dif_first['Offset'].iloc[-1] = 0
-            df_dif_first['ValueSum'] = df_dif_first['Value'].cumsum() + df.loc[start_year]['Overall']
-            df_dif_first['ValueSum'].iloc[-1] = df_dif_first['Value'].iloc[-1] + df.loc[start_year]['Overall']
-
-            df_dif_second = pd.DataFrame((df.loc[end_year] - df.loc[middle_year])).reset_index()
-            df_dif_second.columns = ['Eff', 'Value']
-            df_dif_second['Offset'] = df_dif_second['Value'].cumsum() - df_dif_second['Value'] + df.loc[middle_year]['Overall']
-            df_dif_second['Offset'].iloc[-1] = 0
-            df_dif_second['ValueSum'] = df_dif_second['Value'].cumsum() + df.loc[middle_year]['Overall']
-            df_dif_second['ValueSum'].iloc[-1] = df_dif_second['Value'].iloc[-1] + df.loc[middle_year]['Overall']
-            df_dif = pd.concat([df_dif_first, df_dif_second])
-
-            df_dif['Eff'] = df_dif.groupby('Eff').cumcount().astype(str).replace('0', '') + '_' + df_dif['Eff']
-
-            value = df_dif.loc[df_dif['Eff']=='_Engine', 'Offset']
-            overall_baseline = pd.DataFrame({'Eff':'Overall', 'Value':value, 'Offset':0, 'ValueSum':value})
-            df_dif = pd.concat([overall_baseline, df_dif]).reset_index(drop=True)
-            df_dif['Color'] = colors[:len(df_dif)] 
-
-            source = ColumnDataSource(df_dif)
-
-
-            p = figure(x_range=df_dif['Eff'], title=f"Efficiency Improvements Between {start_year} and {end_year}",
-                       x_axis_label='Timeline', y_axis_label='Efficiency Increase: Basis 1958',  width=800, height=400, )
-
-            eff = 'Eff'
-            ops = '_Operational'
-            ops = ops in df_dif[eff].values
-
-            if ops:
-                legend = Legend(items=[
-                ("Overall", [p.square([1], [1], color="dimgrey")]),
-                ("Engine", [p.square([1], [1], color="darkblue")]),
-                ("Aerodynamic", [p.square([1], [1], color="royalblue")]),
-                ("Structural", [p.square([1], [1], color="steelblue")]),
-                ("Operational", [p.square([1], [1], color="lightblue")]),
-                ("Residual", [p.square([1], [1], color="red")])])
-
-            else:
-                legend = Legend(items=[
-                ("Overall", [p.square([1], [1], color="dimgrey")]),
-                ("Engine", [p.square([1], [1], color="darkblue")]),
-                ("Aerodynamic", [p.square([1], [1], color="royalblue")]),
-                ("Structural", [p.square([1], [1], color="steelblue")]),
-                ("Residual", [p.square([1], [1], color="red")])])
-
-
-            p.vbar(x='Eff', top='ValueSum', width=0.9, source=source, bottom='Offset', fill_color='Color', line_color='Color')
-            p.add_layout(legend, 'right')
-            p.xaxis.major_label_text_font_size = "0pt"
-
-            start = Label(x=5, y=0, x_units='screen', y_units='screen', text=str(start_year), text_font_size='12pt',  text_color='black')
-            middle = Label(x=270, y=0, x_units='screen', y_units='screen', text=str(middle_year), text_font_size='12pt', text_color='black')
-            end = Label(x=530, y=0, x_units='screen', y_units='screen', text=str(end_year), text_font_size='12pt', text_color='black')
-            p.add_layout(start)
-            p.add_layout(middle)
-            p.add_layout(end)
-            line = Span(location=0, dimension='width', line_color='black', line_width=3, line_dash = 'dashed')
-            p.ygrid.grid_line_color = 'gray'
-            p.ygrid.grid_line_alpha = 0.3
-            p.ygrid.minor_grid_line_color = 'navy'
-            p.ygrid.minor_grid_line_alpha = 0.1
-            p.xgrid.grid_line_color = None
-            p.xaxis.major_tick_line_color = None
-            p.add_layout(line)
-
-            return p
-
-        # Define the callback function for widget changes
-        def update_plot(event):
-            selected_variable = variable_widget.value
-            if selected_variable == "Index Decomposition Analyis" or selected_variable == "Include Operational":
-                start_year = int(start_year_widget.value)
-                middle_year = int(middle_year_widget.value)
-                end_year = int(end_year_widget.value)
-
-                start_year_widget.options = [str(year) for year in range(1958, middle_year)]
-                middle_year_widget.options = [str(year) for year in range(start_year + 1, end_year)]
-                end_year_widget.options = [str(year) for year in range(middle_year + 1, 2021)]
-
-                p = plot(start_year,middle_year, end_year, selected_variable)
-                dashboard[-1][0] = p
-                
-
-        # Create slider widget
-        start_year_widget = pn.widgets.Select(name="Start Year", options=[str(year) for year in range(1958, 2019)], value =str(1958))
-        middle_year_widget = pn.widgets.Select(name="Middle Year", options=[str(year) for year in range(1959, 2020)], value = str(2000))
-        end_year_widget = pn.widgets.Select(name="End Year", options=[str(year) for year in range(1960, 2021)], value = str(2020))
-
-        # Create a selection widget
-        variable_widget = pn.widgets.Select(name="Variable", options=["Index Decomposition Analyis", "Include Operational"])
-
-        start_year = 1958
-        middle_year = 2000
-        end_year = 2020
-
-        # Register the callback function for widget changes
-        variable_widget.param.watch(update_plot, 'value')
-        start_year_widget.param.watch(update_plot, 'value')
-        middle_year_widget.param.watch(update_plot, 'value')
-        end_year_widget.param.watch(update_plot, 'value')
-
-        p = plot(start_year, middle_year, end_year, "Index Decomposition Analyis")
-        
-        years = pn.Column(variable_widget, start_year_widget, middle_year_widget, end_year_widget)
-        # Create a layout for the widgets and plot
-        dashboard = pn.Column(text,line, pn.Row(p, years))
-        
-        return dashboard
-
-
-    # In[6]:
-
-
-    def create_db3(): 
-        aircraft = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/aircraft.xlsx'
-        aircraft = pd.read_excel(aircraft)
-        
-        lee =  'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/data/aircraft_lee.xlsx'
-        lee = pd.read_excel(lee)
-
-        line = pn.layout.Divider(sizing_mode='stretch_width')
-        text = """
-        <div style="max-width: 600px">
-        In the following graph, overall efficiency improvements are visualized, starting with the first commercial aircraft, the de Havilland Comet 1. 
-        
-        Future projections are also integrated in the graph for comparison. The SB-Wing, Double Bubble, Advanced TW and BWB projects overall efficiency improvements were all given in literature in relation, to a current aircraft.
-        
-        The TW Limit is calculated based on the maximal sub-efficiency improvements that can be achieved with respect to technological and economic limitations. 
-        </div>
-        """
-        
-        #Get aircraft data
-        regionalcarriers = ['Canadair CRJ 900','Canadair RJ-200ER /RJ-440', 'Canadair RJ-700','Embraer 190'
-                               'Embraer ERJ-175', 'Embraer-135','Embraer-145']
-        regional = aircraft.loc[aircraft['Description'].isin(regionalcarriers)]
-        normal = aircraft.loc[~aircraft['Description'].isin(regionalcarriers)]
-        comet4 = lee.loc[lee['Label']=='Comet 4']
-        comet1 = lee.loc[lee['Label'] == 'Comet 1']
-        rest = lee.loc[~lee['Label'].isin(['Comet 4', 'Comet 1'])]
-        
-        comet1_source = ColumnDataSource(data=dict(year=comet1['Year'], energy=comet1['EU (MJ/ASK)'], name=comet1['Label']))
-        comet4_source = ColumnDataSource(data=dict(year=comet4['Year'], energy=comet4['EU (MJ/ASK)'], name=comet4['Label']))
-        normal_source = ColumnDataSource(data=dict(year=normal['YOI'], energy=normal['MJ/ASK'], name=normal['Description']))
-        regional_source = ColumnDataSource(data=dict(year=regional['YOI'], energy=regional['MJ/ASK'], name=regional['Description']))
-        rest_source = ColumnDataSource(data=dict(year=rest['Year'], energy=rest['EU (MJ/ASK)'], name=rest['Label']))
-        sbwing_source = ColumnDataSource(data=dict(year=[2035], energy=[0.592344579], name=['SB-Wing']))
-        db_source = ColumnDataSource(data=dict(year=[2035], energy=[0.381840741], name=['Double Bubble']))
-        adv_tw_source = ColumnDataSource(data=dict(year=[2040], energy=[0.82264895], name=['Advanced TW']))
-        bwb_source = ColumnDataSource(data=dict(year=[2040], energy=[0.797082164], name=['BWB']))
-        twlimit_source = ColumnDataSource(data=dict(year=[2050], energy=[0.618628347], name=['TW Limit']))
-
-        # Create the figure
-        p = figure(width=800, height=400,)
-
-        # Scatter plots
-        comet1_renderer = p.scatter('year', 'energy', source=comet1_source, marker='*', size = 10,  color='blue', legend_label='Comet 1')
-        comet4_renderer = p.scatter('year', 'energy', source=comet4_source, marker='star', size = 10, color='blue', legend_label='Comet 4')
-        normal_renderer = p.scatter('year', 'energy', source=normal_source, marker='^', size = 10, color='blue', legend_label='US DOT T2')
-        regional_renderer = p.scatter('year', 'energy', source=regional_source, marker='^', size = 10, color='purple', legend_label='Regional US DOT T2')
-        rest_renderer = p.scatter('year', 'energy', source=rest_source, marker='o', size = 10, color='red', legend_label='Lee et al.')
-        sbwing_renderer = p.scatter('year', 'energy', source=sbwing_source, marker='square', size=10, color='black', legend_label='SB-Wing')
-        db_renderer = p.scatter('year', 'energy', source=db_source, marker='circle', size=10, color='black', legend_label='Double Bubble')
-        adv_tw_renderer = p.scatter('year', 'energy', source=adv_tw_source, marker='inverted_triangle', size=10, color='black', legend_label='Advanced TW')
-        bwb_renderer = p.scatter('year', 'energy', source=bwb_source, marker='star', size=10, color='black', legend_label='BWB')
-        twlimit_renderer = p.scatter('year', 'energy', source=twlimit_source, marker='triangle', size=10, color='black', legend_label='TW Limit')
-        
-        p.add_layout(Legend())
-
-        # Set axis labels
-        p.xaxis.axis_label = 'Aircraft Year of Introduction'
-        p.yaxis.axis_label = 'EU (MJ/ASK)'
-
-        # Set plot range and ticks
-        p.y_range.start = 0
-        p.y_range.end = 9
-        p.x_range.start = 1950
-        p.x_range.end = 2052
-        p.xaxis.ticker = list(range(1950, 2051, 10))
-        p.grid.grid_line_color = 'gray'
-        p.grid.grid_line_alpha = 0.3
-        p.grid.minor_grid_line_color = 'navy'
-        p.grid.minor_grid_line_alpha = 0.1
-        
-        hover = HoverTool()
-        hover.renderers = [comet1_renderer, comet4_renderer, normal_renderer, regional_renderer, rest_renderer, sbwing_renderer
-                          , db_renderer, adv_tw_renderer, bwb_renderer, twlimit_renderer]
-        hover.tooltips = [
-        ("Name", "@name"),
-        ("Year", "@year"),
-        ("EU (MJ/ASK)", "@energy"),
-        ]
-        p.add_tools(hover)
-
-        dashboard = pn.Column(text,line, p)
-        
-        return dashboard
-        
-
-
-    # # Create DB
-
-    # In[7]:
-
-
-    dashboard_container = pn.Column()
-
-    title = pn.pane.HTML("""
-    <h1 style='font-size:36px;font-weight:bold;'>Aircraft Performance Analysis Tool</h1>
-    """)
-    # Create a logo
-    psi = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/psilogo.png'
-    psi = pn.pane.PNG(psi, width=150, height=100)
-    esa = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/esalogo.png'
-    esa = pn.pane.PNG(esa, width=150, height=100)
-    eth = 'https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/eth.png'
-    eth = pn.pane.PNG(eth, width=150, height=100)
-
-    # Create a panel to hold the title and logo
-    line = pn.layout.Divider(sizing_mode='stretch_width')
-    # Create the row with aligned items
-    header = pn.Row(title,pn.Spacer(width=100),psi,esa,eth,)
-
-    def update_dashboard(event):
-        selection_value = event.new
-        if selection_value == 'Forecast':
-            dashboard = create_db1()
-        elif selection_value == 'Author':
-            dashboard = about_authors()
-        elif selection_value == 'Data':
-            dashboard = data()
-        elif selection_value == 'Historic Efficiency Decomposition':
-            dashboard = create_db2()
-        elif selection_value == 'Overall Efficiency Improvements':
-            dashboard = create_db3()
-        else:
-            raise ValueError("Invalid dashboard selection.")
-        dashboard_container.clear()
-        dashboard_container.append(dashboard)
-
-    # Set the initial dashboard to the "Historic Efficiency Decomposition" plot
-    dashboard = create_db1()
-    dashboard_container.append(dashboard)
-
-    selection = pn.widgets.RadioButtonGroup(options=['Forecast', 'Historic Efficiency Decomposition', 'Overall Efficiency Improvements','Data', 'Author'], name='Select Dashboard', value='Forecast')
-    selection.param.watch(update_dashboard, 'value')
-
-    layout = pn.Column(header,line, selection,line, dashboard_container)
-    layout.servable()
-
-
-    # In[ ]:
-
-
-
-
-
-    # In[ ]:
-
-
-
-
-
-    # In[ ]:
-
-
-
-
-
-    # In[66]:
-
-
-
-
-
-    # In[ ]:
-
-
-
-
-
-    # In[ ]:
-
-
-
-
-
-    # In[ ]:
-
-
-
-
-
-    # In[ ]:
-
-
-
-
-
-    # In[ ]:
-
-
-
-
-
-    # In[ ]:
-
-
-
-
-
-    # In[ ]:
-
-
-
-
-
-    # In[ ]:
-
-
-
-
-
-    # In[ ]:
-
-
-
-
-
-    # In[ ]:
-
-
-
-
-
-    # In[ ]:
-
-
-
-
-
-
-    await write_doc()`
-      await pyodide.runPythonAsync(code);
-    }
-    main();
+      const pyodideWorker = new Worker("./main_db.js");
+      pyodideWorker.busy = false
+      pyodideWorker.queue = []
+      
+      function send_change(jsdoc, event) {
+        if (event.setter_id != null && event.setter_id == 'py') {
+          return
+        } else if (pyodideWorker.busy && event.model && event.attr) {
+          let events = []
+          for (const old_event of pyodideWorker.queue) {
+            if (!(old_event.model === event.model && old_event.attr === event.attr)) {
+              events.push(old_event)
+            }
+          }
+          events.push(event)
+          pyodideWorker.queue = events
+          return
+        }
+        const patch = jsdoc.create_json_patch([event])
+        pyodideWorker.busy = true
+        pyodideWorker.postMessage({type: 'patch', patch: patch})
+      }
+      
+      pyodideWorker.onmessage = async (event) => {
+        const msg = event.data
+      
+        const body = document.getElementsByTagName('body')[0]
+        const loading_msgs = document.getElementsByClassName('pn-loading-msg')
+        if (msg.type === 'idle') {
+          if (pyodideWorker.queue.length) {
+            const patch = pyodideWorker.jsdoc.create_json_patch_string(pyodideWorker.queue)
+            pyodideWorker.busy = true
+            pyodideWorker.queue = []
+            pyodideWorker.postMessage({type: 'patch', patch: patch})
+          } else {
+            pyodideWorker.busy = false
+          }
+        } else if (msg.type === 'status') {
+          let loading_msg
+          if (loading_msgs.length) {
+            loading_msg = loading_msgs[0]
+          } else if (body.classList.contains('pn-loading')) {
+            loading_msg = document.createElement('div')
+            loading_msg.classList.add('pn-loading-msg')
+            body.appendChild(loading_msg)
+          }
+          if (loading_msg != null) {
+            loading_msg.innerHTML = msg.msg
+          }
+        } else if (msg.type === 'render') {
+          const docs_json = JSON.parse(msg.docs_json)
+          const render_items = JSON.parse(msg.render_items)
+          const root_ids = JSON.parse(msg.root_ids)
+      
+          // Remap roots in message to element IDs
+          const root_els = document.querySelectorAll('[data-root-id]')
+          const data_roots = []
+          for (const el of root_els) {
+             el.innerHTML = ''
+             data_roots.push([el.getAttribute('data-root-id'), el.id])
+          }
+          data_roots.sort((a, b) => a[0]<b[0] ? -1: 1)
+          const roots = {}
+          for (let i=0; i<data_roots.length; i++) {
+            roots[root_ids[i]] = data_roots[i][1]
+          }
+          render_items[0]['roots'] = roots
+          render_items[0]['root_ids'] = root_ids
+      
+          // Embed content
+          const [views] = await Bokeh.embed.embed_items(docs_json, render_items)
+      
+          // Remove loading spinner and message
+          body.classList.remove("pn-loading", "arc")
+          for (const loading_msg of loading_msgs) {
+            loading_msg.remove()
+          }
+      
+          // Setup bi-directional syncing
+          pyodideWorker.jsdoc = jsdoc = [...views.roots.values()][0].model.document
+          jsdoc.on_change(send_change.bind(null, jsdoc), false)
+          pyodideWorker.postMessage({'type': 'rendered'})
+          pyodideWorker.postMessage({'type': 'location', location: JSON.stringify(window.location)})
+        } else if (msg.type === 'patch') {
+          pyodideWorker.jsdoc.apply_json_patch(msg.patch, msg.buffers, setter_id='py')
+        }
+      };
     </script>
     <script type="application/json" id="p1230">
-      {"4b1f9952-26af-4b46-97d5-b40eecb38b93":{"version":"3.1.1","title":"Panel Application","defs":[{"type":"model","name":"ReactiveHTML1"},{"type":"model","name":"FlexBox1","properties":[{"name":"align_content","kind":"Any","default":"flex-start"},{"name":"align_items","kind":"Any","default":"flex-start"},{"name":"flex_direction","kind":"Any","default":"row"},{"name":"flex_wrap","kind":"Any","default":"wrap"},{"name":"justify_content","kind":"Any","default":"flex-start"}]},{"type":"model","name":"FloatPanel1","properties":[{"name":"config","kind":"Any","default":{"type":"map"}},{"name":"contained","kind":"Any","default":true},{"name":"position","kind":"Any","default":"right-top"},{"name":"offsetx","kind":"Any","default":null},{"name":"offsety","kind":"Any","default":null},{"name":"theme","kind":"Any","default":"primary"},{"name":"status","kind":"Any","default":"normalized"}]},{"type":"model","name":"GridStack1","properties":[{"name":"mode","kind":"Any","default":"warn"},{"name":"ncols","kind":"Any","default":null},{"name":"nrows","kind":"Any","default":null},{"name":"allow_resize","kind":"Any","default":true},{"name":"allow_drag","kind":"Any","default":true},{"name":"state","kind":"Any","default":[]}]},{"type":"model","name":"drag1","properties":[{"name":"slider_width","kind":"Any","default":5},{"name":"slider_color","kind":"Any","default":"black"},{"name":"value","kind":"Any","default":50}]},{"type":"model","name":"click1","properties":[{"name":"terminal_output","kind":"Any","default":""},{"name":"debug_name","kind":"Any","default":""},{"name":"clears","kind":"Any","default":0}]},{"type":"model","name":"FastWrapper1","properties":[{"name":"object","kind":"Any","default":null},{"name":"style","kind":"Any","default":null}]},{"type":"model","name":"NotificationAreaBase1","properties":[{"name":"position","kind":"Any","default":"bottom-right"},{"name":"_clear","kind":"Any","default":0}]},{"type":"model","name":"NotificationArea1","properties":[{"name":"notifications","kind":"Any","default":[]},{"name":"position","kind":"Any","default":"bottom-right"},{"name":"_clear","kind":"Any","default":0},{"name":"types","kind":"Any","default":[{"type":"map","entries":[["type","warning"],["background","#ffc107"],["icon",{"type":"map","entries":[["className","fas fa-exclamation-triangle"],["tagName","i"],["color","white"]]}]]},{"type":"map","entries":[["type","info"],["background","#007bff"],["icon",{"type":"map","entries":[["className","fas fa-info-circle"],["tagName","i"],["color","white"]]}]]}]}]},{"type":"model","name":"Notification","properties":[{"name":"background","kind":"Any","default":null},{"name":"duration","kind":"Any","default":3000},{"name":"icon","kind":"Any","default":null},{"name":"message","kind":"Any","default":""},{"name":"notification_type","kind":"Any","default":null},{"name":"_destroyed","kind":"Any","default":false}]},{"type":"model","name":"TemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"BootstrapTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"MaterialTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]}],"roots":[{"type":"object","name":"Column","id":"p1068","attributes":{"name":"Column00208","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"type":"object","name":"ImportedStyleSheet","id":"p1074","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/loading.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1085","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/listpanel.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1070","attributes":{"url":"https://cdn.jsdelivr.net/npm/material-components-web@7.0.0/dist/material-components-web.min.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1071","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/bundled/theme/default.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1072","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/bundled/theme/material_variables.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1073","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/bundled/theme/material.css"}}],"margin":0,"sizing_mode":"stretch_width","align":"start","children":[{"type":"object","name":"Row","id":"p1069","attributes":{"name":"Row00142","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1085"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":0,"align":"start","children":[{"type":"object","name":"panel.models.markup.HTML","id":"p1075","attributes":{"stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":[5,10],"align":"start","text":"\n&amp;lt;h1 style=&amp;#x27;font-size:36px;font-weight:bold;&amp;#x27;&amp;gt;Aircraft Performance Analysis Tool&amp;lt;/h1&amp;gt;\n","disable_math":true}},{"type":"object","name":"Spacer","id":"p1077","attributes":{"name":"Spacer00139","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"width":100,"min_width":100,"margin":0,"align":"start"}},{"type":"object","name":"panel.models.markup.HTML","id":"p1079","attributes":{"stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","text":"&amp;lt;img src=&amp;quot;https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/psilogo.png&amp;quot;  style=&amp;quot;max-width: 100%; max-height: 100%; object-fit: contain; width: 150px; height: 100px;&amp;quot;&amp;gt;&amp;lt;/img&amp;gt;"}},{"type":"object","name":"panel.models.markup.HTML","id":"p1081","attributes":{"stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","text":"&amp;lt;img src=&amp;quot;https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/esalogo.png&amp;quot;  style=&amp;quot;max-width: 100%; max-height: 100%; object-fit: contain; width: 150px; height: 100px;&amp;quot;&amp;gt;&amp;lt;/img&amp;gt;"}},{"type":"object","name":"panel.models.markup.HTML","id":"p1083","attributes":{"stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","text":"&amp;lt;img src=&amp;quot;https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/eth.png&amp;quot;  style=&amp;quot;max-width: 100%; max-height: 100%; object-fit: contain; width: 150px; height: 100px;&amp;quot;&amp;gt;&amp;lt;/img&amp;gt;"}}]}},{"type":"object","name":"Div","id":"p1088","attributes":{"name":"Divider00136","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"type":"object","name":"ImportedStyleSheet","id":"p1086","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/loading.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1087","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/divider.css"}}],"margin":0,"width_policy":"fit","sizing_mode":"stretch_width","align":"start","text":"&lt;hr&gt;"}},{"type":"object","name":"RadioButtonGroup","id":"p1091","attributes":{"css_classes":["solid"],"stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"type":"object","name":"ImportedStyleSheet","id":"p1090","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/button.css"}},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":[5,10],"align":"start","labels":["Forecast","Historic Efficiency Decomposition","Overall Efficiency Improvements","Data","Author"],"active":0}},{"type":"object","name":"Div","id":"p1094","attributes":{"name":"Divider00136","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"type":"object","name":"ImportedStyleSheet","id":"p1092","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/loading.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1093","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/divider.css"}}],"margin":0,"width_policy":"fit","sizing_mode":"stretch_width","align":"start","text":"&lt;hr&gt;"}},{"type":"object","name":"Column","id":"p1095","attributes":{"name":"Column00109","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1085"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":0,"sizing_mode":"stretch_width","align":"start","children":[{"type":"object","name":"Column","id":"p1096","attributes":{"name":"Column00202","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1085"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":0,"sizing_mode":"stretch_width","align":"start","children":[{"type":"object","name":"panel.models.markup.HTML","id":"p1099","attributes":{"css_classes":["markdown"],"stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"type":"object","name":"ImportedStyleSheet","id":"p1098","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/markdown.css"}},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":[5,10],"align":"start","text":"&amp;lt;div style=&amp;quot;max-width: 600px&amp;quot;&amp;gt;\nThe Dashboard displays future trajectories for efficiency improvements, specifically focusing on various design concepts. These concepts&amp;#x27; efficiency improvements are assessed based on customizable parameters: seat load factor, air traffic management enhancements, and the annual growth rate for passenger air transport.\n&amp;lt;p&amp;gt;Once a scenario is chosen, the Dashboard will calculate the corresponding CO2 emissions and compare them to the CO2 reduction targets set by IATA, ICAO, and Eurocontrol. This comparison will help gauge the effectiveness of the efficiency improvements in meeting the industry&amp;#x27;s environmental goals.&amp;lt;/p&amp;gt;\n&amp;lt;ul&amp;gt;\n&amp;lt;li&amp;gt;EC Target: 75% Reduction in Net CO2 Emissions until 2050 (Baseline 2011)&amp;lt;/li&amp;gt;\n&amp;lt;li&amp;gt;IATA Target: 50% Reduction in Net CO2 Emissions until 2050 (Baseline 2005)&amp;lt;/li&amp;gt;\n&amp;lt;li&amp;gt;ICAO Target: 60% Reduction in CO2/RPK until 2050 (Baseline 2005)&amp;lt;/li&amp;gt;\n&amp;lt;/ul&amp;gt;\n&amp;lt;/div&amp;gt;\n"}},{"type":"object","name":"Div","id":"p1102","attributes":{"name":"Divider00145","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"type":"object","name":"ImportedStyleSheet","id":"p1100","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/loading.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1101","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/divider.css"}}],"margin":0,"width_policy":"fit","sizing_mode":"stretch_width","align":"start","text":"&lt;hr&gt;"}},{"type":"object","name":"Row","id":"p1103","attributes":{"name":"Row00193","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1085"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":0,"align":"start","children":[{"type":"object","name":"Figure","id":"p1010","attributes":{"width":800,"height":400,"x_range":{"type":"object","name":"DataRange1d","id":"p1012"},"y_range":{"type":"object","name":"DataRange1d","id":"p1011","attributes":{"start":0}},"x_scale":{"type":"object","name":"LinearScale","id":"p1024"},"y_scale":{"type":"object","name":"LinearScale","id":"p1026"},"title":{"type":"object","name":"Title","id":"p1013","attributes":{"text":" Future Efficiency and Forecast Scenarios"}},"renderers":[{"type":"object","name":"GlyphRenderer","id":"p1063","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p1057","attributes":{"selected":{"type":"object","name":"Selection","id":"p1059","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1058"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":{"type":"bytes","data":"0AcAANEHAADSBwAA0wcAANQHAADVBwAA1gcAANcHAADYBwAA2QcAANoHAADbBwAA3AcAAN0HAADeBwAA3wcAAOAHAADhBwAA4gcAAOMHAADkBwAA5QcAAOYHAADnBwAA6AcAAOkHAADqBwAA6wcAAOwHAADtBwAA7gcAAO8HAADwBwAA8QcAAPIHAADzBwAA9AcAAPUHAAD2BwAA9wcAAPgHAAD5BwAA+gcAAPsHAAD8BwAA/QcAAP4HAAD/BwAAAAgAAAEIAAACCAAA"},"shape":[51],"dtype":"int32","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"VXjKWw4NfkChbd5lLgWAQI4/LdnU9n1AUChRMC21fEDDicPtTi1+QO0lPYHeZX9AhhFXPU6MgEBKJ+H7c3OBQEjg2XrNWIJAmO6dCnH6gUCqthWPN7mCQImMKf27I4NAf4wgExEhhUC4qMaVaCKGQAWnr3cBK4dAPoyKmcr+h0AAINcuqQmJQHJ1kC1KBYtAQdTPIlcBjEA2LhaHxHKMQCb9z8EvgIdA6uZUsuevd0BEtxXQZ0uBQGU5mj3zOolAVAL7GIVniUDuer5s7GqJQLXfOTSmNIlARObBBbO9iEDhOUYPgBaIQIpVx7cDaIdA+C+VAQXehkAEEJPFG4+GQCfGMrnkeYZAlGJjRSSRhkCIbehVlMaGQIaA2slID4dAHjDxSWNSh0AKExzloraHQMzu6w6hHIhAQNr7s2WEiECfbm/l+O2IQCwKndliWYlAfzO77KvGiUA7LJGh3DWKQEXCKqL9popAvW6PwBcai0CY0nz3M4+LQJegJGtbBoxA7ATuaZd/jEAmmzpt8fqMQCEDLxpzeI1A"},"shape":[51],"dtype":"float64","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p1064","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1065"}}},"glyph":{"type":"object","name":"Line","id":"p1060","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"blue","line_width":3}},"nonselection_glyph":{"type":"object","name":"Line","id":"p1061","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"blue","line_alpha":0.1,"line_width":3}},"muted_glyph":{"type":"object","name":"Line","id":"p1062","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"blue","line_alpha":0.2,"line_width":3}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1018","attributes":{"tools":[{"type":"object","name":"PanTool","id":"p1042"},{"type":"object","name":"WheelZoomTool","id":"p1043"},{"type":"object","name":"BoxZoomTool","id":"p1044","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1045","attributes":{"syncable":false,"level":"overlay","visible":false,"left_units":"canvas","right_units":"canvas","bottom_units":"canvas","top_units":"canvas","line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5}}}},{"type":"object","name":"SaveTool","id":"p1046"},{"type":"object","name":"ResetTool","id":"p1047"},{"type":"object","name":"HelpTool","id":"p1048"}]}},"left":[{"type":"object","name":"LinearAxis","id":"p1035","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p1037","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1038"},"axis_label":"CO2 Emissions [Mt]","major_label_policy":{"type":"object","name":"AllLabels","id":"p1036"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1028","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p1030","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1031"},"axis_label":"Year","major_label_policy":{"type":"object","name":"AllLabels","id":"p1029"}}}],"center":[{"type":"object","name":"Grid","id":"p1034","attributes":{"axis":{"id":"p1028"},"grid_line_color":"gray","grid_line_alpha":0.3,"minor_grid_line_color":"navy","minor_grid_line_alpha":0.1}},{"type":"object","name":"Grid","id":"p1041","attributes":{"dimension":1,"axis":{"id":"p1035"},"grid_line_color":"gray","grid_line_alpha":0.3,"minor_grid_line_color":"navy","minor_grid_line_alpha":0.1}},{"type":"object","name":"Legend","id":"p1066","attributes":{"items":[{"type":"object","name":"LegendItem","id":"p1067","attributes":{"label":{"type":"value","value":"Tech Freeze"},"renderers":[{"id":"p1063"}]}}]}}]}},{"type":"object","name":"Column","id":"p1130","attributes":{"name":"Column00184","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1085"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":0,"align":"start","children":[{"type":"object","name":"Column","id":"p1131","attributes":{"name":"Column00181","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1085"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":0,"align":"start","children":[{"type":"object","name":"Column","id":"p1003","attributes":{"children":[{"type":"object","name":"Div","id":"p1002","attributes":{"text":"&lt;h4 &gt;Forecast Scenarios&lt;/h4&gt;"}},{"type":"object","name":"CheckboxGroup","id":"p1001","attributes":{"labels":["EC","IATA","ICAO"]}}]}},{"type":"object","name":"Column","id":"p1006","attributes":{"children":[{"type":"object","name":"Div","id":"p1005","attributes":{"text":"&lt;h4&gt;Future Technologies&lt;/h4&gt;"}},{"type":"object","name":"RadioGroup","id":"p1004","attributes":{"labels":["Tech Freeze","TW Limit","BWB","Advanced TW","TTBW","Double Bubble"],"active":0}}]}}]}},{"type":"object","name":"Column","id":"p1134","attributes":{"name":"Column00166","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1085"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":0,"align":"start","children":[{"type":"object","name":"Slider","id":"p1008","attributes":{"styles":{"type":"map","entries":[["font-weight","bold"]]},"title":"Seat Load Factor 2050 (%)","start":80,"end":100,"value":90,"step":0.5}},{"type":"object","name":"Slider","id":"p1007","attributes":{"styles":{"type":"map","entries":[["font-weight","bold"]]},"title":"Annual Growth Rate (%)","start":0,"end":5,"value":2,"step":0.1}},{"type":"object","name":"Slider","id":"p1009","attributes":{"styles":{"type":"map","entries":[["font-weight","bold"]]},"title":"ATM Improvements 2050 (%)","start":0,"end":15,"value":0,"step":0.2}}]}}]}}]}}]}}]}}]}},{"type":"object","name":"panel.models.location.Location","id":"p1186","attributes":{"name":"location","reload":false}},{"type":"object","name":"panel.models.browser.BrowserInfo","id":"p1200","attributes":{"name":"browser_info"}}],"callbacks":{"type":"map"}}}
+      {"ce84431a-96e1-4e11-a635-7998536f08f6":{"version":"3.1.1","title":"Panel Application","defs":[{"type":"model","name":"ReactiveHTML1"},{"type":"model","name":"FlexBox1","properties":[{"name":"align_content","kind":"Any","default":"flex-start"},{"name":"align_items","kind":"Any","default":"flex-start"},{"name":"flex_direction","kind":"Any","default":"row"},{"name":"flex_wrap","kind":"Any","default":"wrap"},{"name":"justify_content","kind":"Any","default":"flex-start"}]},{"type":"model","name":"FloatPanel1","properties":[{"name":"config","kind":"Any","default":{"type":"map"}},{"name":"contained","kind":"Any","default":true},{"name":"position","kind":"Any","default":"right-top"},{"name":"offsetx","kind":"Any","default":null},{"name":"offsety","kind":"Any","default":null},{"name":"theme","kind":"Any","default":"primary"},{"name":"status","kind":"Any","default":"normalized"}]},{"type":"model","name":"GridStack1","properties":[{"name":"mode","kind":"Any","default":"warn"},{"name":"ncols","kind":"Any","default":null},{"name":"nrows","kind":"Any","default":null},{"name":"allow_resize","kind":"Any","default":true},{"name":"allow_drag","kind":"Any","default":true},{"name":"state","kind":"Any","default":[]}]},{"type":"model","name":"drag1","properties":[{"name":"slider_width","kind":"Any","default":5},{"name":"slider_color","kind":"Any","default":"black"},{"name":"value","kind":"Any","default":50}]},{"type":"model","name":"click1","properties":[{"name":"terminal_output","kind":"Any","default":""},{"name":"debug_name","kind":"Any","default":""},{"name":"clears","kind":"Any","default":0}]},{"type":"model","name":"FastWrapper1","properties":[{"name":"object","kind":"Any","default":null},{"name":"style","kind":"Any","default":null}]},{"type":"model","name":"NotificationAreaBase1","properties":[{"name":"position","kind":"Any","default":"bottom-right"},{"name":"_clear","kind":"Any","default":0}]},{"type":"model","name":"NotificationArea1","properties":[{"name":"notifications","kind":"Any","default":[]},{"name":"position","kind":"Any","default":"bottom-right"},{"name":"_clear","kind":"Any","default":0},{"name":"types","kind":"Any","default":[{"type":"map","entries":[["type","warning"],["background","#ffc107"],["icon",{"type":"map","entries":[["className","fas fa-exclamation-triangle"],["tagName","i"],["color","white"]]}]]},{"type":"map","entries":[["type","info"],["background","#007bff"],["icon",{"type":"map","entries":[["className","fas fa-info-circle"],["tagName","i"],["color","white"]]}]]}]}]},{"type":"model","name":"Notification","properties":[{"name":"background","kind":"Any","default":null},{"name":"duration","kind":"Any","default":3000},{"name":"icon","kind":"Any","default":null},{"name":"message","kind":"Any","default":""},{"name":"notification_type","kind":"Any","default":null},{"name":"_destroyed","kind":"Any","default":false}]},{"type":"model","name":"TemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"BootstrapTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"MaterialTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]}],"roots":[{"type":"object","name":"Column","id":"p1068","attributes":{"name":"Column00208","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"type":"object","name":"ImportedStyleSheet","id":"p1074","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/loading.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1085","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/listpanel.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1070","attributes":{"url":"https://cdn.jsdelivr.net/npm/material-components-web@7.0.0/dist/material-components-web.min.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1071","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/bundled/theme/default.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1072","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/bundled/theme/material_variables.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1073","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/bundled/theme/material.css"}}],"margin":0,"sizing_mode":"stretch_width","align":"start","children":[{"type":"object","name":"Row","id":"p1069","attributes":{"name":"Row00142","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1085"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":0,"align":"start","children":[{"type":"object","name":"panel.models.markup.HTML","id":"p1075","attributes":{"stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":[5,10],"align":"start","text":"\n&amp;lt;h1 style=&amp;#x27;font-size:36px;font-weight:bold;&amp;#x27;&amp;gt;Aircraft Performance Analysis Tool&amp;lt;/h1&amp;gt;\n","disable_math":true}},{"type":"object","name":"Spacer","id":"p1077","attributes":{"name":"Spacer00139","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"width":100,"min_width":100,"margin":0,"align":"start"}},{"type":"object","name":"panel.models.markup.HTML","id":"p1079","attributes":{"stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","text":"&amp;lt;img src=&amp;quot;https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/psilogo.png&amp;quot;  style=&amp;quot;max-width: 100%; max-height: 100%; object-fit: contain; width: 150px; height: 100px;&amp;quot;&amp;gt;&amp;lt;/img&amp;gt;"}},{"type":"object","name":"panel.models.markup.HTML","id":"p1081","attributes":{"stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","text":"&amp;lt;img src=&amp;quot;https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/esalogo.png&amp;quot;  style=&amp;quot;max-width: 100%; max-height: 100%; object-fit: contain; width: 150px; height: 100px;&amp;quot;&amp;gt;&amp;lt;/img&amp;gt;"}},{"type":"object","name":"panel.models.markup.HTML","id":"p1083","attributes":{"stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"width":150,"height":100,"margin":[5,10],"sizing_mode":"fixed","align":"start","text":"&amp;lt;img src=&amp;quot;https://raw.githubusercontent.com/sustainableaviation/Aircraft-Performance/main/dashboard/images/eth.png&amp;quot;  style=&amp;quot;max-width: 100%; max-height: 100%; object-fit: contain; width: 150px; height: 100px;&amp;quot;&amp;gt;&amp;lt;/img&amp;gt;"}}]}},{"type":"object","name":"Div","id":"p1088","attributes":{"name":"Divider00136","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"type":"object","name":"ImportedStyleSheet","id":"p1086","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/loading.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1087","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/divider.css"}}],"margin":0,"width_policy":"fit","sizing_mode":"stretch_width","align":"start","text":"&lt;hr&gt;"}},{"type":"object","name":"RadioButtonGroup","id":"p1091","attributes":{"css_classes":["solid"],"stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"type":"object","name":"ImportedStyleSheet","id":"p1090","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/button.css"}},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":[5,10],"align":"start","labels":["Forecast","Historic Efficiency Decomposition","Overall Efficiency Improvements","Data","Author"],"active":0}},{"type":"object","name":"Div","id":"p1094","attributes":{"name":"Divider00136","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"type":"object","name":"ImportedStyleSheet","id":"p1092","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/loading.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1093","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/divider.css"}}],"margin":0,"width_policy":"fit","sizing_mode":"stretch_width","align":"start","text":"&lt;hr&gt;"}},{"type":"object","name":"Column","id":"p1095","attributes":{"name":"Column00109","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1085"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":0,"sizing_mode":"stretch_width","align":"start","children":[{"type":"object","name":"Column","id":"p1096","attributes":{"name":"Column00202","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1085"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":0,"sizing_mode":"stretch_width","align":"start","children":[{"type":"object","name":"panel.models.markup.HTML","id":"p1099","attributes":{"css_classes":["markdown"],"stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"type":"object","name":"ImportedStyleSheet","id":"p1098","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/markdown.css"}},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":[5,10],"align":"start","text":"&amp;lt;div style=&amp;quot;max-width: 600px&amp;quot;&amp;gt;\nThe Dashboard displays future trajectories for efficiency improvements, specifically focusing on various design concepts. These concepts&amp;#x27; efficiency improvements are assessed based on customizable parameters: seat load factor, air traffic management enhancements, and the annual growth rate for passenger air transport.\n&amp;lt;p&amp;gt;Once a scenario is chosen, the Dashboard will calculate the corresponding CO2 emissions and compare them to the CO2 reduction targets set by IATA, ICAO, and Eurocontrol. This comparison will help gauge the effectiveness of the efficiency improvements in meeting the industry&amp;#x27;s environmental goals.&amp;lt;/p&amp;gt;\n&amp;lt;ul&amp;gt;\n&amp;lt;li&amp;gt;EC Target: 75% Reduction in Net CO2 Emissions until 2050 (Baseline 2011)&amp;lt;/li&amp;gt;\n&amp;lt;li&amp;gt;IATA Target: 50% Reduction in Net CO2 Emissions until 2050 (Baseline 2005)&amp;lt;/li&amp;gt;\n&amp;lt;li&amp;gt;ICAO Target: 60% Reduction in CO2/RPK until 2050 (Baseline 2005)&amp;lt;/li&amp;gt;\n&amp;lt;/ul&amp;gt;\n&amp;lt;/div&amp;gt;\n"}},{"type":"object","name":"Div","id":"p1102","attributes":{"name":"Divider00145","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"type":"object","name":"ImportedStyleSheet","id":"p1100","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/loading.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1101","attributes":{"url":"https://cdn.holoviz.org/panel/1.0.2/dist/css/divider.css"}}],"margin":0,"width_policy":"fit","sizing_mode":"stretch_width","align":"start","text":"&lt;hr&gt;"}},{"type":"object","name":"Row","id":"p1103","attributes":{"name":"Row00193","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1085"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":0,"align":"start","children":[{"type":"object","name":"Figure","id":"p1010","attributes":{"width":1000,"height":500,"x_range":{"type":"object","name":"DataRange1d","id":"p1012"},"y_range":{"type":"object","name":"DataRange1d","id":"p1011","attributes":{"start":0}},"x_scale":{"type":"object","name":"LinearScale","id":"p1024"},"y_scale":{"type":"object","name":"LinearScale","id":"p1026"},"title":{"type":"object","name":"Title","id":"p1013","attributes":{"text":" Future Efficiency and Forecast Scenarios"}},"renderers":[{"type":"object","name":"GlyphRenderer","id":"p1063","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p1057","attributes":{"selected":{"type":"object","name":"Selection","id":"p1058","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1059"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":{"type":"bytes","data":"0AcAANEHAADSBwAA0wcAANQHAADVBwAA1gcAANcHAADYBwAA2QcAANoHAADbBwAA3AcAAN0HAADeBwAA3wcAAOAHAADhBwAA4gcAAOMHAADkBwAA5QcAAOYHAADnBwAA6AcAAOkHAADqBwAA6wcAAOwHAADtBwAA7gcAAO8HAADwBwAA8QcAAPIHAADzBwAA9AcAAPUHAAD2BwAA9wcAAPgHAAD5BwAA+gcAAPsHAAD8BwAA/QcAAP4HAAD/BwAAAAgAAAEIAAACCAAA"},"shape":[51],"dtype":"int32","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"VXjKWw4NfkChbd5lLgWAQI4/LdnU9n1AUChRMC21fEDDicPtTi1+QO0lPYHeZX9AhhFXPU6MgEBKJ+H7c3OBQEjg2XrNWIJAmO6dCnH6gUCqthWPN7mCQImMKf27I4NAf4wgExEhhUC4qMaVaCKGQAWnr3cBK4dAPoyKmcr+h0AAINcuqQmJQHJ1kC1KBYtAQdTPIlcBjEA2LhaHxHKMQCb9z8EvgIdA6uZUsuevd0BEtxXQZ0uBQGU5mj3zOolAVAL7GIVniUDuer5s7GqJQLXfOTSmNIlARObBBbO9iEDhOUYPgBaIQIpVx7cDaIdA+C+VAQXehkAEEJPFG4+GQCfGMrnkeYZAlGJjRSSRhkCIbehVlMaGQIaA2slID4dAHjDxSWNSh0AKExzloraHQMzu6w6hHIhAQNr7s2WEiECfbm/l+O2IQCwKndliWYlAfzO77KvGiUA7LJGh3DWKQEXCKqL9popAvW6PwBcai0CY0nz3M4+LQJegJGtbBoxA7ATuaZd/jEAmmzpt8fqMQCEDLxpzeI1A"},"shape":[51],"dtype":"float64","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p1064","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1065"}}},"glyph":{"type":"object","name":"Line","id":"p1060","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"blue","line_width":3}},"nonselection_glyph":{"type":"object","name":"Line","id":"p1061","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"blue","line_alpha":0.1,"line_width":3}},"muted_glyph":{"type":"object","name":"Line","id":"p1062","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"blue","line_alpha":0.2,"line_width":3}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1019","attributes":{"tools":[{"type":"object","name":"PanTool","id":"p1042"},{"type":"object","name":"WheelZoomTool","id":"p1043"},{"type":"object","name":"BoxZoomTool","id":"p1044","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1045","attributes":{"syncable":false,"level":"overlay","visible":false,"left_units":"canvas","right_units":"canvas","bottom_units":"canvas","top_units":"canvas","line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5}}}},{"type":"object","name":"SaveTool","id":"p1046"},{"type":"object","name":"ResetTool","id":"p1047"},{"type":"object","name":"HelpTool","id":"p1048"}]}},"left":[{"type":"object","name":"LinearAxis","id":"p1035","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p1036","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1038"},"axis_label":"CO2 Emissions [Mt]","major_label_policy":{"type":"object","name":"AllLabels","id":"p1037"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1028","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p1029","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1031"},"axis_label":"Year","major_label_policy":{"type":"object","name":"AllLabels","id":"p1030"}}}],"center":[{"type":"object","name":"Grid","id":"p1034","attributes":{"axis":{"id":"p1028"},"grid_line_color":"gray","grid_line_alpha":0.3,"minor_grid_line_color":"navy","minor_grid_line_alpha":0.1}},{"type":"object","name":"Grid","id":"p1041","attributes":{"dimension":1,"axis":{"id":"p1035"},"grid_line_color":"gray","grid_line_alpha":0.3,"minor_grid_line_color":"navy","minor_grid_line_alpha":0.1}},{"type":"object","name":"Legend","id":"p1066","attributes":{"items":[{"type":"object","name":"LegendItem","id":"p1067","attributes":{"label":{"type":"value","value":"Tech Freeze"},"renderers":[{"id":"p1063"}]}}]}}]}},{"type":"object","name":"Column","id":"p1130","attributes":{"name":"Column00184","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1085"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":0,"align":"start","children":[{"type":"object","name":"Column","id":"p1131","attributes":{"name":"Column00166","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1085"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":0,"align":"start","children":[{"type":"object","name":"Slider","id":"p1008","attributes":{"styles":{"type":"map","entries":[["font-weight","bold"]]},"title":"Seat Load Factor 2050 (%)","start":80,"end":100,"value":90,"step":0.5}},{"type":"object","name":"Slider","id":"p1007","attributes":{"styles":{"type":"map","entries":[["font-weight","bold"]]},"title":"Annual Growth Rate (%)","start":0,"end":5,"value":2,"step":0.1}},{"type":"object","name":"Slider","id":"p1009","attributes":{"styles":{"type":"map","entries":[["font-weight","bold"]]},"title":"ATM Improvements 2050 (%)","start":0,"end":15,"value":0,"step":0.2}}]}},{"type":"object","name":"Column","id":"p1134","attributes":{"name":"Column00181","stylesheets":["\n:host(.pn-loading).arc:before, .pn-loading.arc:before {\n  background-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSJtYXJnaW46IGF1dG87IGJhY2tncm91bmQ6IG5vbmU7IGRpc3BsYXk6IGJsb2NrOyBzaGFwZS1yZW5kZXJpbmc6IGF1dG87IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiPiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzNjM2MzIiBzdHJva2Utd2lkdGg9IjEwIiByPSIzNSIgc3Ryb2tlLWRhc2hhcnJheT0iMTY0LjkzMzYxNDMxMzQ2NDE1IDU2Ljk3Nzg3MTQzNzgyMTM4Ij4gICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiBkdXI9IjFzIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIj48L2FuaW1hdGVUcmFuc2Zvcm0+ICA8L2NpcmNsZT48L3N2Zz4=\");\n  background-size: auto calc(min(50%, 400px));\n}",{"id":"p1074"},{"id":"p1085"},{"id":"p1070"},{"id":"p1071"},{"id":"p1072"},{"id":"p1073"}],"margin":0,"align":"start","children":[{"type":"object","name":"Column","id":"p1003","attributes":{"children":[{"type":"object","name":"Div","id":"p1002","attributes":{"text":"&lt;h4 &gt;Forecast Scenarios&lt;/h4&gt;"}},{"type":"object","name":"CheckboxGroup","id":"p1001","attributes":{"labels":["EC","IATA","ICAO"]}}]}},{"type":"object","name":"Column","id":"p1006","attributes":{"children":[{"type":"object","name":"Div","id":"p1005","attributes":{"text":"&lt;h4&gt;Future Technologies&lt;/h4&gt;"}},{"type":"object","name":"RadioGroup","id":"p1004","attributes":{"labels":["Tech Freeze","TW Limit","BWB","Advanced TW","TTBW","Double Bubble"],"active":0}}]}}]}}]}}]}}]}}]}}]}},{"type":"object","name":"panel.models.location.Location","id":"p1186","attributes":{"name":"location","reload":false}},{"type":"object","name":"panel.models.browser.BrowserInfo","id":"p1200","attributes":{"name":"browser_info"}}],"callbacks":{"type":"map"}}}
     </script>
     <script type="text/javascript">
       (function() {
@@ -789,7 +165,7 @@
             (function(root) {
               function embed_document(root) {
               const docs_json = document.getElementById('p1230').textContent;
-              const render_items = [{"docid":"4b1f9952-26af-4b46-97d5-b40eecb38b93","roots":{"p1068":"e8b4fa78-1b40-42ce-b732-3a935b6d9f86","p1186":"a50ec801-6033-42c9-aaa1-ea13b36fb182","p1200":"a6951b9f-03ac-40fd-9b41-7db445fb5953"},"root_ids":["p1068","p1186","p1200"]}];
+              const render_items = [{"docid":"ce84431a-96e1-4e11-a635-7998536f08f6","roots":{"p1068":"a9f9f96d-6019-4cb1-b972-99fc884bc945","p1186":"b0576836-0b9a-4ef2-808d-cd5d8ec8625b","p1200":"dd498ae2-5319-4b78-8246-3e298875d42f"},"root_ids":["p1068","p1186","p1200"]}];
               root.Bokeh.embed.embed_items(docs_json, render_items);
               }
               if (root.Bokeh !== undefined) {
