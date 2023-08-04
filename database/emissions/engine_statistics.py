@@ -24,19 +24,17 @@ def calculate(savefig, folder_path):
                                  'YOI']]
     # Get all Aircraft-Engine Combinations
     emissions_df = emissions_df.groupby(['YOI','Name', 'Engine Identification' ], as_index=False).mean()
-
     # Get the First Appearance of an Engine in a Commercial Aircraft
     yearly_emissions = emissions_df.groupby(['Engine Identification', 'Dry weight,integer,kilogram',
        'Fan diameter,float,metre', 'TSFC Cruise','TSFC T/O', 'B/P Ratio',
        'Pressure Ratio', 'Engine Efficiency', 'Overall pressure ratio,float,None'], as_index=False).agg({'YOI':'min'})
-
     # Create Colorspectrum for First Engine Appearance in Commercial Aircraft and the ICAO Testdate
     years = yearly_emissions['YOI']
     years2 = data['Application Date']
 
     column_data1 = pd.to_numeric(years, errors='coerce')
     column_data2 = pd.to_numeric(years2, errors='coerce')
-    norm = mcolors.Normalize(vmin=1959, vmax=2000)
+    norm = mcolors.Normalize(vmin=1959, vmax=2020)
     norm_column_data1 = norm(column_data1)
     norm_column_data2 = norm(column_data2)
     # create a colormap and map normalized values to colors

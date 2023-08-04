@@ -41,12 +41,12 @@ def calculate(savefig, flight_speed, folder_path):
 
     ax.scatter(data['prop_eff'], data['thermal_eff'], marker='o', c=colors)
 
-    ellipse2 = Ellipse((0.85, 0.48), 0.04, 0.03, color='r', fill=False)
-    ax.text(0.85, 0.48, 'Future HBR Engines', horizontalalignment='center', verticalalignment='center')
+    #ellipse2 = Ellipse((0.85, 0.48), 0.04, 0.03, color='r', fill=False)
+    #ax.text(0.85, 0.48, 'Future HBR Engines', horizontalalignment='center', verticalalignment='center')
     ellipse3 = Ellipse((0.91, 0.5), 0.03, 0.05, color='r', fill=False)
     ax.text(0.91, 0.5, 'Future Open Rotor Engines', horizontalalignment='center', verticalalignment='center')
 
-    ax.add_artist(ellipse2)
+    #ax.add_artist(ellipse2)
     ax.add_artist(ellipse3)
     ax.vlines(0.925,0.4,0.6, color='black', label='Theoretical Limit')
     ax.hlines(0.55,0.7,0.925, color='black', label='Practical Limit NOx', linestyles='--')

@@ -15,6 +15,7 @@ def calculate(savefig, folder_path):
     T2 = pd.read_csv(r"database\rawdata\USDOT\T_SCHEDULE_T2.csv")
     AC_types = pd.read_csv(r"database\rawdata\USDOT\L_AIRCRAFT_TYPE (1).csv")
     historic = pd.read_excel(r"database\rawdata\USDOT\Traffic and Operations 1929-Present_Vollständige D_data.xlsx")
+    growthrates = pd.read_excel(r"database\rawdata\USDOT\growthrates.xlsx")
     historic_slf = historic.dropna(subset='PLF').reset_index()
     historic_rpk = historic.dropna(subset= 'RPKs (mils)').reset_index()
     historic_slf['PLF'] = historic_slf['PLF'].str.replace(',', '.').astype(float)
@@ -72,17 +73,21 @@ def calculate(savefig, folder_path):
         plt.savefig(folder_path+'/airborneefficiency.png')
 
     # Figure for historic RPK
-    fig = plt.figure(dpi=300, figsize=(10,4))
+    fig = plt.figure(dpi=300, figsize=(10,3))
 
     # Add a subplot
     ax = fig.add_subplot(1, 1, 1)
     x_label = 'Year'
     y_label = 'Trillion RPK'
 
-    ax.plot(historic_rpk['Year'], historic_rpk['RPKs (mils)']/1000000,color='black',marker='*', label='Trillion RPK')
+    ax.plot(historic_rpk['Year'], historic_rpk['RPKs (mils)']/1000000,color='black', linewidth=2)
+    ax.plot(growthrates['Year'], growthrates['Billion RPK High'] / 1000, color='purple', label='High Forecast (3.7\%)', linestyle='--', linewidth=2)
+    ax.plot(growthrates['Year'], growthrates['Billion RPK Medium'] / 1000, color='orange', label='Medium Forecast (3.0\%)', linestyle='--', linewidth=2)
+    ax.plot(growthrates['Year'], growthrates['Billion RPK Low'] / 1000, color='green', label='Low Forecast (2.4\%)', linestyle='--', linewidth=2)
+    ax.legend()
     plt.ylim(bottom=0)
-    plt.xlim(1970, 2023)
-    plt.xticks(np.arange(1970, 2024, 10))
+    plt.xlim(1970, 2050)
+    plt.xticks(np.arange(1970, 2051, 10))
 
     plot.plot_layout(None, x_label, y_label, ax)
     if savefig:

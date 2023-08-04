@@ -72,7 +72,7 @@ def calculate(savefig, folder_path):
 
     plt.xlabel('Wingspan [m]')
     plt.ylabel('Height [m]')
-    plt.title('FAA Aircraft Categorisation')
+
     plt.ylim(0,24.4)
     plt.xlim(0,80)
     plt.tight_layout()
