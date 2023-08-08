@@ -50,17 +50,23 @@ def calculate(savefig, folder_path, vel, air_density):
     plt.yticks(new_yticks, new_ylabels)
 
     # Add Lines and Text for some Examples
-    ax.hlines(69, 0, 200, color='black', label='CFM56-7 Series', linewidth=1.5)
-    ax.hlines(43, 0, 200, color='black', label='PW4090', linewidth=1.5)
+    #ax.hlines(69, 0, 200, color='black', label='CFM56-7 Series', linewidth=1.5)
+    #ax.hlines(43, 0, 200, color='black', label='PW4090', linewidth=1.5)
     ax.hlines(10, 0, 200, color='black', label='Open Rotor', linewidth=1.5)
-    ax.vlines(166.95,0,80, color='black', label='Boeing 777-300', linewidth=1.5)
-    ax.vlines(54.584, 0, 80, color='black', label='Boeing 737-800', linewidth=1.5)
-    ax.text(166.95, 82, 'Boeing 777-300', horizontalalignment='center', verticalalignment='center')
-    ax.text(54.585, 82, 'Boeing 737-800', horizontalalignment='center', verticalalignment='center')
-    ax.text(2, 67, 'CFM56-7B Series', horizontalalignment='left', verticalalignment='center')
-    ax.text(2, 41, 'PW4090', horizontalalignment='left', verticalalignment='center')
+    #ax.vlines(166.95,0,80, color='black', label='Boeing 777-300', linewidth=1.5)
+    #ax.vlines(54.584, 0, 80, color='black', label='Boeing 737-800', linewidth=1.5)
+    #ax.text(166.95, 82, 'Boeing 777-300', horizontalalignment='center', verticalalignment='center')
+    #ax.text(54.585, 82, 'Boeing 737-800', horizontalalignment='center', verticalalignment='center')
+    #ax.text(2, 67, 'CFM56-7B Series', horizontalalignment='left', verticalalignment='center')
+    #ax.text(2, 41, 'PW4090', horizontalalignment='left', verticalalignment='center')
     ax.text(2, 8, 'Open Rotor', horizontalalignment='left', verticalalignment='center')
+    ax.scatter(166.95, 43, color='white', zorder=2)
+    ax.annotate('B777-300/PW4090', (140, 46), fontsize=8, zorder=2, color='white')
+    ax.scatter(54.584, 69, color='white', zorder=2)
+    ax.annotate('B737-800/CFM56-7B', (20, 72), fontsize=8, zorder=2, color='white')
+
     plot.plot_layout(None, xlabel, ylabel, ax)
+
     ax.set_title(r'Commercial Aircraft with 2 Turbofan Engines', loc = 'center')
     if savefig:
         plt.savefig(folder_path + '/prop_efficiency_limitation.png')

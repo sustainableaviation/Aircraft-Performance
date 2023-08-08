@@ -408,14 +408,13 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
     tech_freeze_color = "orange"
 
     # Set the vertical spacing between labels
-    label_spacing = 0.12
+    label_spacing = 0.14
 
     # Add labels and rectangles
     for i, label in enumerate(combined_labels):
         color = current_tech_color if label == "Current Tech" else tech_freeze_color if label == "Tech Freeze" else colors[i - 2]
         axs[-1].add_patch(plt.Rectangle((0, 0.85 - i * label_spacing), 0.04, 0.05, color=color))
-        axs[-1].text(0.06, 0.88 - i * label_spacing, label, fontsize=10, ha="left", va="center")
-
+        axs[-1].text(0.06, 0.865 - i * label_spacing, label, fontsize=14, ha="left", va="center")
 
     plt.rcParams.update({
         "text.usetex": True,

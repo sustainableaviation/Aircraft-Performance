@@ -67,7 +67,7 @@ def calculate(savefig, folder_path):
     y_label = 'Efficiency Improvements [\%]'
 
     ax.scatter(data['YOI'], data['EI (MJ/RPK)'],color='black', label='Overall (MJ/RPK)')
-    ax.scatter(slf['Year'], slf['PLF'], color='blue', label='Operational (SLF (1959 normalized))')
+    ax.scatter(slf['Year'], slf['PLF'], color='blue', label='Operational (SLF)')
     ax.scatter(data['YOI'], data['L/D estimate'],color='royalblue', label='Aerodynamic (L/D)')
     ax.scatter(data['YOI'], data['OEW/Exit Limit'],color='steelblue', label='Structural (OEW/Exit)')
     ax.scatter(data['YOI'], data['TSFC Cruise'],color='lightblue', label='Engine (TSFC)')
@@ -135,7 +135,7 @@ def calculate(savefig, folder_path):
     data = data[column_order]
 
     # Create new Labels
-    labels = ['Overall Eff. (baseline MJ/RPK(1960))','Operational (SLF)', 'Aerodynamic (L/D)','Structural (OEW/Exit)','Engine (TSFC)', 'Residual' ]
+    labels = ['Overall (MJ/RPK)','Operational (SLF)', 'Aerodynamic (L/D)','Structural (OEW/Exit)','Engine (TSFC)', 'Residual' ]
 
     # Create subplots for each column
     cm = 1 / 2.54  # for inches-cm conversion

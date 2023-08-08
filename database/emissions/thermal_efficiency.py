@@ -73,6 +73,8 @@ def calculate(savefig, folder_path, temp):
     ax.vlines(1600,0,90, color='black', label=r'\textbf{Stoichiometric Limit}', linewidth=1.5)
     ax.text(1040, 45, r'\textbf{Temp NOx Limit}',rotation=90, horizontalalignment='center', verticalalignment='center',  weight='bold')
     ax.text(1640, 45, r'\textbf{Stoichiometric Limit}',rotation=90,  horizontalalignment='center', verticalalignment='center',  weight='bold')
+    ax.scatter(600, 68.7, color='white', zorder=2)
+    ax.annotate('CFM56-5A1', (520, 73), fontsize=8, zorder=2, color='white')
 
     plot.plot_layout(None, xlabel, ylabel, ax)
     ax.set_title(r'With $\eta_{Compressor}$ and $\eta_{Turbine}$ = 0.9', loc='left')
@@ -154,7 +156,6 @@ def calculate(savefig, folder_path, temp):
     ax.vlines(1600,0,90, color='black', label=r'\textbf{Stoichiometric Limit}', linewidth=1.5)
     ax.text(1040, 45, r'\textbf{Temp NOx Limit}',rotation=90, horizontalalignment='center', verticalalignment='center',  weight='bold')
     ax.text(1640, 45, r'\textbf{Stoichiometric Limit}',rotation=90,  horizontalalignment='center', verticalalignment='center',  weight='bold')
-
     plot.plot_layout(None, xlabel, ylabel, ax)
 
     # Assumptions made: T3 = 300 K , Pressure Ratio P2/P1 = 5 and P4/P3 is in a range from 2 to 20
