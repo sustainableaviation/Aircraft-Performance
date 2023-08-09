@@ -18,6 +18,7 @@ import database.index_decomposition.technological
 import database.index_decomposition.technooperational
 import database.aerodynamics.payload_range
 import database.dashboard_prep.future_scen
+import database.index_decomposition.waterfall_charts
 import warnings
 import datetime
 import os
@@ -53,7 +54,7 @@ print(' --> [CREATE AIRCRAFT DATABASE]: Calibrate Linear Fit for Take-Off vs Cru
 linear_fit = database.emissions.to_vs_cruise_sfc.calibrate(savefig, folder_path)
 print(' --> [CREATE AIRCRAFT DATABASE]: Scale Take-Off TFSC from ICAO emissions Databank to Cruise TSFC ...')
 database.emissions.icaoemssions.calculate(linear_fit)
-print(' --> [CREATE AIRCRAFT DATABASE]: Add all Aircraft-Engine combinations and its Parameters ...')
+print(' --> [CREATE AIRCRAFT DATABASE]: Add all Aircraft-Engine Combinations and its Parameters ...')
 limit_tsfc = database.overall.aircraft_engine_configurations.calculate(heatingvalue_kg, air_density, flight_vel, savefig, folder_path)
 print(' --> [CREATE AIRCRAFT DATABASE]: Create Graphs for Engine Statistics ...')
 database.emissions.engine_statistics.calculate(savefig, folder_path)
@@ -67,9 +68,9 @@ print(' --> [CREATE AIRCRAFT DATABASE]: Calculate L/D Ratio from Breguet Range E
 limit_aero = database.aerodynamics.aerodynamicefficiency.calculate(savefig, air_density, flight_vel, gravity, folder_path)
 print(' --> [CREATE AIRCRAFT DATABASE]: Split Engine Efficiency into Thermal and Propulsive Efficiency...')
 database.emissions.therm_prop_eff.calculate(savefig, flight_vel, folder_path)
-print(' --> [CREATE AIRCRAFT DATABASE]: Calculating maximal Thermal Efficiency for a Turbofan Brayton-Cycle')
+print(' --> [CREATE AIRCRAFT DATABASE]: Calculating Maximum Thermal Efficiency for a Turbofan Brayton-Cycle')
 database.emissions.thermal_efficiency.calculate(savefig, folder_path, temp)
-print(' --> [CREATE AIRCRAFT DATABASE]: Calculating maximal Propulsive Efficiency fregarding Thrust Level and Fan Diameter')
+print(' --> [CREATE AIRCRAFT DATABASE]: Calculating Maximum Propulsive Efficiency fregarding Thrust Level and Fan Diameter')
 database.emissions.propulsive_efficiency.calculate(savefig, folder_path, flight_vel, air_density)
 print(' --> [CREATE AIRCRAFT DATABASE]: Summarize Data per Aircraft Type')
 database.overall.aggregate_per_aircraft.calculate()
@@ -81,6 +82,8 @@ print(' --> [INDEX DECOMPOSITION ANALYSIS]: LMDI for Technical Sub-Efficiencies'
 database.index_decomposition.technological.calculate(savefig, folder_path)
 print(' --> [INDEX DECOMPOSITION ANALYSIS]: LMDI for Technical and Operational Sub-Efficiencies')
 database.index_decomposition.technooperational.calculate(savefig, folder_path)
-print(' --> [PREPARE DASHBOARD]: Create Future Scenarios')
+print(' --> [INDEX DECOMPOSITION ANALYSIS]: Create Waterfall Charts')
+database.index_decomposition.waterfall_charts.calculate(savefig, folder_path)
+print(' --> [PREPARE DASHBOARD]: Create Future Scenarios and Model Fleet Integration')
 database.dashboard_prep.future_scen.calculate(limit_tsfc, limit_aero, savefig, folder_path)
 print(' --> [FINISH]')

@@ -28,6 +28,7 @@ As an output the Excel File Databank.xlsx will be produced.
 * [payload_range](database/aerodynamics/payload_range.py) : Creates Payload Range Diagrams for the A320 and the B777-200
 * [index_decomposition](database/index_decomposition/technological.py) : Decomposes the Technical Efficiency Improvements MJ/ASK into Structural, Aerodynamic, Engine and Residual Efficiency.  
 * [index_decomposition_operational](database/index_decomposition/technooperational.py) : Integrates the SLF to calculate MJ/RPK and decomposes the efficiency gains into Structural, Aerodynamic, Engine, Operational and Residual.
+* [waterfall_charts](database/index_decomposition/waterfall_charts.py) : Create Waterfall Charts for the IDA to compare the years 1958, 2000 and 2020
 * [future_scen](./database/dashboard_prep/future_scen.py) : Calculate Efficiency and CO2 emissions for Future Aircraft Scenarios
 ### [Tools](database/tools)
 The tools folder contains some additionally helpful files, such as plotting properties, calculating the atmospheric conditions or dictionaries to match the aircraft names from the different sources.

@@ -94,7 +94,7 @@ def calculate(savefig, folder_path):
 
     ax.scatter(eu['YOI'], eu['EU (MJ/ASK)'],color='black', label='Overall (MJ/ASK)')
     ax.scatter(ld['YOI'], ld['L/D estimate'],color='royalblue', label='Aerodynamic (L/D)')
-    ax.scatter(oew['YOI'], oew['OEW/Exit Limit'],color='steelblue', label='Structural (OEW/Exit)')
+    ax.scatter(oew['YOI'], oew['OEW/Exit Limit'],color='steelblue', label='Structural (OEW/PEL)')
     ax.scatter(tsfc['YOI'], tsfc['TSFC Cruise'],color='lightblue', label='Engine (TSFC)')
 
     ax.plot(years, p_all_tsfc(years),color='lightblue')
@@ -152,7 +152,7 @@ def calculate(savefig, folder_path):
     column_order = ['deltaC_Tot','deltaC_Aerodyn', 'deltaC_Structural', 'deltaC_Engine', 'deltaC_Res']
     data = data[column_order]
     # Create new Labels
-    labels = ['Overall (MJ/ASK)', 'Aerodynamic (L/D)','Structural (OEW/Exit)','Engine (TSFC)', 'Residual' ]
+    labels = ['Overall (MJ/ASK)', 'Aerodynamic (L/D)','Structural (OEW/PEL)','Engine (TSFC)', 'Residual' ]
 
     # Create subplots for each column
     fig, ax = plt.subplots(dpi=300)
