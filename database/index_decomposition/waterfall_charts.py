@@ -67,20 +67,40 @@ def calculate(savefig, folder_path):
     # Create the waterfall chart
     fig, ax = plt.subplots(dpi=300)
 
-    # Plot the bars
+    # Plot the bars and add text values
     for i in range(len(df)):
         color = df['Color'][i]
         value = df['Value'][i]
         offset = df['Offset'][i]
         label = df['Eff'][i]
 
+        if i == 0:
+            ax.bar(label, value, bottom=offset, color=color, label='_nolegend_')
+            prev_value = value
+            prev_offset = offset
+            continue
+
         ax.bar(label, value, bottom=offset, color=color, label='_nolegend_')
+
+        # Add a horizontal line connecting adjacent bars starting from the second bar
+        ax.hlines(prev_offset + prev_value, i-1.4, i+0.4, color='black', linestyle='-', linewidth=1)
+
+        # Add text value below each bar (with absolute value and percentage), except for i = 5 and i = 10
+        if i != 5 and i != 10:
+            if value >= 0:
+                ax.text(label, offset + value + 5, f'{value:.1f}\%', ha='center', va='top', color='black')
+            else:
+                ax.text(label, offset + value -5, f'{value:.1f}\%', ha='center', va='bottom', color='black')
+
+        prev_value = value
+        prev_offset = offset
+
 
     # Set y-axis labels to have + or - symbols
     ax.yaxis.set_major_formatter(FuncFormatter(lambda x, _: f'{x:.1f}' if x >= 0 else f'{-x:.1f}'))
 
     # Add gridlines and labels
-    ax.axhline(0, color='black', linewidth=0.8)
+    ax.axhline(0, color='black', linewidth=1)
     ylabel = 'Energy Usage: Basis 1958'
     xlabel = 'Timeline'
     title = 'Efficiency Improvements Between 1958 and 2020'
@@ -103,7 +123,6 @@ def calculate(savefig, folder_path):
 
     # Create the legend
     ax.legend(dummy_points, ["Overall", "Engine", "Aerodynamic", "Structural", "Residual"], loc='upper right')
-
     if savefig:
         plt.savefig(folder_path + '/ida_waterfall_tech.png')
 
@@ -171,14 +190,33 @@ def calculate(savefig, folder_path):
         offset = df['Offset'][i]
         label = df['Eff'][i]
 
+        if i == 0:
+            ax.bar(label, value, bottom=offset, color=color, label='_nolegend_')
+            prev_value = value
+            prev_offset = offset
+            continue
+
         ax.bar(label, value, bottom=offset, color=color, label='_nolegend_')
+
+        # Add a horizontal line connecting adjacent bars starting from the second bar
+        ax.hlines(prev_offset + prev_value, i-1.4, i+0.4, color='black', linestyle='-', linewidth=1)
+
+        # Add text value below each bar (with absolute value and percentage), except for i = 5 and i = 10
+        if i != 6 and i != 12:
+            if value >= 0:
+                ax.text(label, offset + value + 5, f'{value:.1f}\%', ha='center', va='top', color='black')
+            else:
+                ax.text(label, offset + value -5, f'{value:.1f}\%', ha='center', va='bottom', color='black')
+
+        prev_value = value
+        prev_offset = offset
 
 
     # Set y-axis labels to have + or - symbols
     ax.yaxis.set_major_formatter(FuncFormatter(lambda x, _: f'{x:.1f}' if x >= 0 else f'{-x:.1f}'))
 
     # Add gridlines and labels
-    ax.axhline(0, color='black', linewidth=0.8)
+    ax.axhline(0, color='black', linewidth=1)
     ylabel = 'Energy Usage: Basis 1958'
     xlabel = 'Timeline'
     title = 'Efficiency Improvements Between 1958 and 2020'

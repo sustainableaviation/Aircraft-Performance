@@ -83,7 +83,7 @@ def calculate(savefig, folder_path):
     fig, ax = plt.subplots(dpi=300)
 
     ax.scatter(data['YOI'], data['Aspect Ratio'], color='black', s=30)
-    ax.scatter(2025, 9.96, color='blue', s=30)
+    ax.scatter(2025, 9.96, color='black', s=30)
     plt.annotate('777X', (2025, 9.96),
                      fontsize=8, xytext=(-10, 5),
                      textcoords='offset points')
