@@ -79,3 +79,6 @@ plt.show()
 # Comparison with our forecast Scenarios: Difficult, we are modeling the fleet integration.
 # Can't compare the energy usage on the fleet level with individual design concepts.
 
+# Add NOx limit line also
+# Think how the integration of the future concepts make sense
+

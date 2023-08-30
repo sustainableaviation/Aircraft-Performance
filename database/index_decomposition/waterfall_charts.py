@@ -217,7 +217,7 @@ def calculate(savefig, folder_path):
 
     # Add gridlines and labels
     ax.axhline(0, color='black', linewidth=1)
-    ylabel = 'Energy Usage: Basis 1958'
+    ylabel = 'Energy Intensity: Basis 1958'
     xlabel = 'Timeline'
     title = 'Efficiency Improvements Between 1958 and 2020'
     plot.plot_layout(title, xlabel, ylabel, ax)
