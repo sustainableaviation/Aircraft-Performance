@@ -21,6 +21,7 @@ years = range(2020, 2051)
 ope2035 = 1/(301/engine)
 ope2045 = 1/(337/engine)
 limit = 1 /(288/engine)
+nox = 1 / (272/engine)
 
 
 # Create a DataFrame with constant values for each year
@@ -51,6 +52,7 @@ for i, column in enumerate(data.columns):
         axs[i].plot(data.index, data[column], color='blue', label = 'Historical Developments')
         axs[i].step(value2020.index, value2020[column], color='red', label='Su-ungkavatin et al.')
         axs[i].axhline(limit, color='black', label='Physical Limit')
+        axs[i].axhline(nox, color='black', label='NOx Limit', linestyle='dashed')
         axs[i].legend()
     if i == 1 or i == 2:
         axs[i].plot(value2020.index, value2020[column], color='red')
@@ -66,8 +68,8 @@ for i, column in enumerate(data.columns):
 
 plt.xlabel('Year')
 plt.tight_layout()
-plt.savefig(r"C:\Users\PRohr\Desktop\Masterarbeit\suungkavatin.png")
-plt.show()
+plt.savefig(r"database\graphs\graphssuungkavatin.png")
+
 
 
 # Su-ungkavatin OPE in 2035: 58% in 2045: 65%, would translate into a TSFC Cruise at 240m/s of 9.6 and 8.57, which is both below our calculate values
@@ -79,6 +81,5 @@ plt.show()
 # Comparison with our forecast Scenarios: Difficult, we are modeling the fleet integration.
 # Can't compare the energy usage on the fleet level with individual design concepts.
 
-# Add NOx limit line also
-# Think how the integration of the future concepts make sense
+# With NOx Limit min TSFC Cruise is 10.95 which is a 272 percent increase
 
