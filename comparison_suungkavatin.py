@@ -2,8 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-data = pd.read_excel(r"C:\Users\PRohr\Desktop\Masterarbeit\Python\Aircraft-Performance\dashboard\data\polynoms.xlsx")
-annual = pd.read_excel(r'C:\Users\PRohr\Desktop\Masterarbeit\Python\Aircraft-Performance\dashboard\data\annualdata.xlsx')
+data = pd.read_excel(r"dashboard\data\polynoms.xlsx")
+annual = pd.read_excel(r'dashboard\data\annualdata.xlsx')
 
 data = data.loc[data['YOI']>=1960]
 data = data.drop(columns=data.columns[0])
