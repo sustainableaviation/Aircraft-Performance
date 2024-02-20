@@ -3,6 +3,9 @@ import math
 from database.tools import dict, plot
 import matplotlib.pyplot as plt
 import numpy as np
+from pathlib import Path
+
+
 def calculate(heatingvalue, air_density, flight_vel, savefig, folder_path):
 
     #Load Dictionaries
@@ -10,14 +13,14 @@ def calculate(heatingvalue, air_density, flight_vel, savefig, folder_path):
     airplanes = airplanes_dict.keys()
 
     # Get Data from the Aircraft-Database, Normalize and Explode JSON files to get a readable pandas DF
-    models = pd.read_json(r"database\rawdata\aircraft-database\aircraft-types.json")
+    models = pd.read_json(Path("database/rawdata/aircraft-database/aircraft-types.json"))
     models = models.explode('engineModels').reset_index(drop=True)
     models = models.explode('propertyValues').reset_index(drop=True)
-    manufacturers = pd.read_json(r'database\rawdata\aircraft-database\manufacturers.json')
+    manufacturers = pd.read_json(Path("database/rawdata/aircraft-database/manufacturers.json"))
     manufacturers = manufacturers[['id', 'name']]
-    engines = pd.read_json(r"database\rawdata\aircraft-database\engine-models.json")
+    engines = pd.read_json(Path("database/rawdata/aircraft-database/engine-models.json"))
     engines = engines.explode('propertyValues').reset_index(drop=True)
-    properties = pd.read_json(r"database\rawdata\aircraft-database\properties.json")
+    properties = pd.read_json(Path("database/rawdata/aircraft-database/properties.json"))
     properties['Value']= properties['name'].astype(str)+','+properties['type'].astype(str)+','+properties['unit'].astype(str)
     properties = properties[['id', 'Value']]
     properties_dict = properties.set_index('id')['Value'].to_dict()
@@ -104,7 +107,7 @@ def calculate(heatingvalue, air_density, flight_vel, savefig, folder_path):
     models3 = models3.drop(columns='Wingspan (winglets),float,metre')
 
     # Load ICAO Engines with the calibrated TSFC Values
-    icao = pd.read_excel(r'database\rawdata\emissions\icao_cruise_emissions.xlsx')
+    icao = pd.read_excel(Path("database/rawdata/emissions/icao_cruise_emissions.xlsx"))
     icao = icao[['Engine Identification', 'TSFC Cruise', 'Final Test Date', 'B/P Ratio', 'Pressure Ratio', 'TSFC T/O']]
     icao = icao.groupby(['Engine Identification'], as_index=False).agg({'TSFC T/O':'mean','TSFC Cruise':'mean', 'Final Test Date':'min', 'B/P Ratio':'mean', 'Pressure Ratio':'mean'})
 
@@ -162,14 +165,14 @@ def calculate(heatingvalue, air_density, flight_vel, savefig, folder_path):
     models4['Engine Efficiency'] = flight_vel / (heatingvalue * models4['TSFC Cruise'])
 
     # Load the Aircraft Databank and merge with the Aircraft-Engine Combinations containing the TSFC cruise
-    databank = pd.read_excel(r'Databank.xlsx')
+    databank = pd.read_excel(Path("Databank.xlsx"))
     databank['Name'] = databank['Name'].str.strip()
     models4['name_x_x'] = models4['name_x_x'].str.strip()
     databank = pd.merge(models4, databank, left_on='name_x_x', right_on='Name', how='outer')
     databank = databank.drop(columns=['name_y_x', 'name_x_x', 'name_x_y','name_y_y'])
 
     # Load the Engine Data from Lee et al.
-    lee = pd.read_excel(r'database\rawdata\aircraftproperties\Aircraft Databank v2.xlsx', sheet_name='New Data Entry')
+    lee = pd.read_excel(Path("database/rawdata/aircraftproperties/Aircraft Databank v2.xlsx"), sheet_name='New Data Entry')
     lee = lee.dropna(subset='TSFC (mg/Ns)')
     lee = lee.groupby(['Name','YOI'], as_index=False).agg({'TSFC (mg/Ns)':'mean'})
     lee['TSFC Cruise'] = lee['TSFC (mg/Ns)']
@@ -192,7 +195,7 @@ def calculate(heatingvalue, air_density, flight_vel, savefig, folder_path):
             databank['Engine Efficiency'] = flight_vel / (heatingvalue * databank['TSFC Cruise'])
 
     # Save the DF
-    databank.to_excel(r'Databank.xlsx', index=False)
+    databank.to_excel(Path("Databank.xlsx"), index=False)
 
     # ------PLOT TSFC CRUISE vs. YOI ------------------------ with Colors for BPR
     cm = 1 / 2.54  # for inches-cm conversion

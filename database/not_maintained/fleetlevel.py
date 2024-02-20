@@ -2,6 +2,9 @@ import pandas as pd
 from test_env.database_creation.tools import dict, plot, T2_preprocessing
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
+
+
 def calculate(savefig, folder_path):
         databank = pd.read_excel(r'Databank.xlsx')
         databank = databank[['Name', 'Type', 'TSFC Cruise', 'EU (MJ/ASK)', 'OEW/Exit Limit', 'L/D estimate']]
@@ -12,8 +15,8 @@ def calculate(savefig, folder_path):
         fullnames = dict.fullname().get_aircraftfullnames()
 
         # Read Data
-        T2 = pd.read_csv(r'database/rawdata/USDOT/T_SCHEDULE_T2.csv')
-        AC_types = pd.read_csv(r"database/rawdata/USDOT/L_AIRCRAFT_TYPE (1).csv")
+        T2 = pd.read_csv(Path("database/rawdata/USDOT/T_SCHEDULE_T2.csv"))
+        AC_types = pd.read_csv(Path("database/rawdata/USDOT/L_AIRCRAFT_TYPE (1).csv"))
 
         # Prepare Data from schedule T2
         T2 = T2_preprocessing.preprocessing(T2, AC_types, airlines, airplanes)

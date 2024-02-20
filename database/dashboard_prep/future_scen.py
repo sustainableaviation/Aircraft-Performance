@@ -3,13 +3,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 from database.tools import dict, plot, T2_preprocessing
 import scipy.interpolate
+from pathlib import Path
 
 def calculate(limit_tsfc, limit_aero, savefig, folder_path):
     # Load Data
     mj_to_co2 = 3.16 / 43.15  # kg CO2 produced per MJ of Jet fuel
-    historic_rpk = pd.read_excel(r'dashboard\data\forecast.xlsx')
-    annual_data = pd.read_excel(r'dashboard\data\annualdata.xlsx')
-    data = pd.read_excel(r'Databank.xlsx')
+    historic_rpk = pd.read_excel(Path("dashboard/data/forecast.xlsx"))
+    annual_data = pd.read_excel(Path("dashboard/data/annualdata.xlsx"))
+    data = pd.read_excel(Path("Databank.xlsx"))
     data = data.sort_values('YOI', ascending=True)
     slf_2019 = annual_data.loc[annual_data['Year'] == 2019, 'PLF'].iloc[0]
 
@@ -54,7 +55,7 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
     techfreeze = pd.concat([annual_data, future], ignore_index=True)
     techfreeze['EI (CO2/RPK)'] = mj_to_co2 * techfreeze['EI (MJ/RPK)']
     techfreeze['EU (CO2/ASK)'] = mj_to_co2 * techfreeze['EU (MJ/ASK)']
-    techfreeze.to_excel(r'dashboard\data\techfreeze.xlsx')
+    techfreeze.to_excel(r'dashboard/data/techfreeze.xlsx')
 
     # Tech Limit Scenario, assumption to reach tech limit in 2050
     # Get Baseline Data
@@ -99,7 +100,7 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
 
     techlimit['EI (CO2/RPK)'] = mj_to_co2 * techlimit['EI (MJ/RPK)']
     techlimit['EU (CO2/ASK)'] = mj_to_co2 * techlimit['EU (MJ/ASK)']
-    techlimit.to_excel(r'dashboard\data\techlimit.xlsx')
+    techlimit.to_excel(Path("dashboard/data/techlimit.xlsx"))
 
     # NASA HWB301-GTF AIRCRAFT, assume techfreeze scenario until 2040 then from 2040 until 2050 complete change to BWB
     b777 = data.loc[data['Name'] == 'B777', 'EU (MJ/ASK)'].values[0]
@@ -133,7 +134,7 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
 
     bwb['EI (CO2/RPK)'] = mj_to_co2 * bwb['EI (MJ/RPK)']
     bwb['EU (CO2/ASK)'] = mj_to_co2 * bwb['EU (MJ/ASK)']
-    bwb.to_excel(r'dashboard\data\bwb.xlsx')
+    bwb.to_excel(Path("dashboard/data/bwb.xlsx"))
 
     # NASA ADVANCED TUBE WING CONCEPT ALSO BASED ON THE 777-200
     future = pd.DataFrame({
@@ -164,7 +165,7 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
 
     advancedtw['EI (CO2/RPK)'] = mj_to_co2 * advancedtw['EI (MJ/RPK)']
     advancedtw['EU (CO2/ASK)'] = mj_to_co2 * advancedtw['EU (MJ/ASK)']
-    advancedtw.to_excel(r'dashboard\data\advancedtw.xlsx')
+    advancedtw.to_excel(Path("dashboard/data/advancedtw.xlsx"))
 
     # MIT DOUBLE BUBBLE D8 AIRCRAFT BASED ON THE 737-800
     start = annual_data.loc[53, 'EU (MJ/ASK)']
@@ -197,7 +198,7 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
 
     doublebubble['EI (CO2/RPK)'] = mj_to_co2 * doublebubble['EI (MJ/RPK)']
     doublebubble['EU (CO2/ASK)'] = mj_to_co2 * doublebubble['EU (MJ/ASK)']
-    doublebubble.to_excel(r'dashboard\data\doublebubble.xlsx')
+    doublebubble.to_excel(Path("dashboard/data/doublebubble.xlsx"))
 
     # Truss Braced Wings
     future = pd.DataFrame({
@@ -228,7 +229,7 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
 
     ttwb['EI (CO2/RPK)'] = mj_to_co2 * ttwb['EI (MJ/RPK)']
     ttwb['EU (CO2/ASK)'] = mj_to_co2 * ttwb['EU (MJ/ASK)']
-    ttwb.to_excel(r'dashboard\data\ttwb.xlsx')
+    ttwb.to_excel(Path("dashboard/data/ttwb.xlsx"))
 
 
     ###############################     TARGET SCENARIOS
@@ -265,7 +266,7 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
     target.loc[target['Year'] < 2011, 'EC Target CO2'] = ''
     target = target.merge(historic_rpk, on='Year', how='outer')
     target = target[['Year', 'ICAO Target CO2/RPK', 'IATA Target CO2', 'EC Target CO2', 'Billion RPK']]
-    target.to_excel(r'dashboard\data\target.xlsx')
+    target.to_excel(Path("dashboard/data/target.xlsx"))
 
     fig = plt.figure(dpi=300)
 
@@ -295,8 +296,8 @@ def calculate(limit_tsfc, limit_aero, savefig, folder_path):
     airplanes = airplanes_dict.keys()
 
     # Read Input Data
-    T2 = pd.read_csv(r"database\rawdata\USDOT\T_SCHEDULE_T2.csv")
-    AC_types = pd.read_csv(r"database\rawdata\USDOT\L_AIRCRAFT_TYPE (1).csv")
+    T2 = pd.read_csv(Path("database/rawdata/USDOT/T_SCHEDULE_T2.csv"))
+    AC_types = pd.read_csv(Path("database/rawdata/USDOT/L_AIRCRAFT_TYPE (1).csv"))
 
     # What is the Fleet Age ?
     # Prepare Data from schedule T2

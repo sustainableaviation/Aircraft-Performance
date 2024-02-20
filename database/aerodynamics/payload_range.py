@@ -2,6 +2,7 @@ import pandas as pd
 from database.tools import dict, plot
 import matplotlib.pyplot as plt
 import numpy as np
+from pathlib import Path
 
 def calculate(savefig, folder_path):
 
@@ -10,8 +11,8 @@ def calculate(savefig, folder_path):
     airplanes = airplanes_dict.keys()
 
     # Load Data for 2022
-    AC_types = pd.read_csv(r"database\rawdata\USDOT\L_AIRCRAFT_TYPE (1).csv")
-    T100 = pd.read_csv(r"database\rawdata\USDOT\T_T100_SEGMENT_ALL_CARRIER_2022.csv")
+    AC_types = pd.read_csv(Path("database/rawdata/USDOT/L_AIRCRAFT_TYPE (1).csv"))
+    T100 = pd.read_csv(Path("database/rawdata/USDOT/T_T100_SEGMENT_ALL_CARRIER_2022.csv"))
 
     # Use the 19 Airlines
     T100 = pd.merge(T100, AC_types, left_on='AIRCRAFT_TYPE', right_on='Code')

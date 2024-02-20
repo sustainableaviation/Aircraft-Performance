@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from test_env.database_creation.tools import dict, plot, T2_preprocessing
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 def calculate(savefig, km, folder_path):
 
@@ -12,8 +13,8 @@ def calculate(savefig, km, folder_path):
        airlines = dict.USAirlines().get_airlines()
 
        #Read Data
-       T2 = pd.read_csv(r"database\rawdata\USDOT\T_SCHEDULE_T2.csv")
-       AC_types = pd.read_csv(r"database\rawdata\USDOT\L_AIRCRAFT_TYPE (1).csv")
+       T2 = pd.read_csv(Path("database/rawdata/USDOT/T_SCHEDULE_T2.csv"))
+       AC_types = pd.read_csv(Path("database/rawdata/USDOT/L_AIRCRAFT_TYPE (1).csv"))
 
        #Prepare Data from schedule T2
        T2 = T2_preprocessing.preprocessing(T2, AC_types, airlines, airplanes)
@@ -23,7 +24,7 @@ def calculate(savefig, km, folder_path):
               {'AVL_SEAT_MILES_320': 'sum', 'Type': 'size'})
 
        T2['ASK'] = T2['AVL_SEAT_MILES_320']*km
-       T2.to_excel(r'C:\Users\PRohr\Downloads\t2.xlsx')
+       T2.to_excel(Path.home() / "Downloads/t2.xlsx")
        a320 = T2.loc[T2['Description']=="Airbus Industrie A320-100/200"]
        b7378 =  T2.loc[T2['Description']=="Boeing 737-800"]
 

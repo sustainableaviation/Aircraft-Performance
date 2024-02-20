@@ -2,10 +2,11 @@ import pandas as pd
 from database.tools import plot
 import matplotlib.pyplot as plt
 import numpy as np
+from pathlib import Path
 
 def calculate(savefig, folder_path):
     # Load SLF data
-    slf = pd.read_excel(r"database\rawdata\USDOT\Traffic and Operations 1929-Present_Vollständige D_data.xlsx")
+    slf = pd.read_excel(Path("database/rawdata/USDOT/Traffic and Operations 1929-Present_Vollständige D_data.xlsx"))
     slf = slf[['Year', 'PLF']]
     slf['PLF'] = slf['PLF'].str.replace(',', '.').astype(float)
     slf = slf[slf['Year'] >= 1958]
@@ -121,10 +122,10 @@ def calculate(savefig, folder_path):
 
     # Get percentage increase of each efficiency and drop first row which only contains NaN
     data = data[['YOI', 'deltaC_Structural_Ops', 'deltaC_Engine_Ops', 'deltaC_Aerodyn_Ops', 'deltaC_SLF_Ops','deltaC_Res_Ops', 'deltaC_Tot_Ops']]
-    dashboard = pd.read_excel(r'dashboard\data\Dashboard.xlsx')
+    dashboard = pd.read_excel(Path("dashboard/data/Dashboard.xlsx"))
     data = data.drop(data.index[0])
     dashboard = dashboard.merge(data, on='YOI')
-    dashboard.to_excel(r'dashboard\data\Dashboard.xlsx', index=False)
+    dashboard.to_excel(Path("dashboard/data/Dashboard.xlsx"), index=False)
     data = data.set_index('YOI')
 
     # Set the width of each group and create new indexes just the set the space right

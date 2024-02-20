@@ -1,3 +1,4 @@
+# %%
 import database.tools.atmospheric_conditions
 import database.operational.airtimeefficiency
 import database.overall.overallefficiency

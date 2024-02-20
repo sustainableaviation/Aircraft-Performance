@@ -2,12 +2,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from database.tools import plot
-
+from pathlib import Path
 
 def calibrate(savefig, folder_path):
 
     # Read Data
-    data = pd.read_excel(r'database\rawdata\emissions\all_engines_for_calibration_years.xlsx', skiprows=range(2), header=3, usecols='A,B,C,D,E,F')
+    data = pd.read_excel(Path("database/rawdata/emissions/all_engines_for_calibration_years.xlsx"), skiprows=range(2), header=3, usecols='A,B,C,D,E,F')
     all = data.groupby(['Engine'], as_index=False).agg({'Engine TSFC cruise [g/kNs]':'mean','Engine TSFC take off [g/kNs]':'mean', 'Release year':'mean'})
 
     #-------------------PLOT TAKE OFF vs CRUISE-------------------------

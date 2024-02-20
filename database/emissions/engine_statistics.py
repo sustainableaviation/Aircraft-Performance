@@ -3,11 +3,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from database.tools import plot
 import matplotlib.colors as mcolors
+from pathlib import Path
 
 def calculate(savefig, folder_path):
 
     # Load Engine Data and Aircraft Databank
-    data = pd.read_excel(r'database\rawdata\emissions\all_engines_for_calibration_years.xlsx', skiprows=range(2), header=3, usecols='A,B,C,D,E,F')
+    data = pd.read_excel(Path("database/rawdata/emissions/all_engines_for_calibration_years.xlsx"), skiprows=range(2), header=3, usecols='A,B,C,D,E,F')
     data = data.groupby(['Engine'], as_index=False).agg(
         {'Engine TSFC cruise [g/kNs]': 'mean', 'Engine TSFC take off [g/kNs]': 'mean', 'Release year': 'mean', 'Application Date':'mean'})
     emissions_df = pd.read_excel(r'Databank.xlsx')

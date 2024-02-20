@@ -1,8 +1,9 @@
 import pandas as pd
+from pathlib import Path
 
 def calculate(z):
     # Read Data
-    emissions_df = pd.read_excel(r'database\rawdata\emissions\edb-emissions-databank_v29 (web).xlsx', sheet_name='Gaseous Emissions and Smoke')
+    emissions_df = pd.read_excel(Path("database/rawdata/emissions/edb-emissions-databank_v29 (web).xlsx"), sheet_name='Gaseous Emissions and Smoke')
 
     # Calculate T/O TSFC
     emissions_df['TSFC T/O']= emissions_df['Fuel Flow T/O (kg/sec)']/emissions_df['Rated Thrust (kN)']*1000
@@ -20,7 +21,7 @@ def calculate(z):
     yearly_emissions['TSFC Cruise'] = yearly_emissions['TSFC T/O'].apply(poly)
 
     # Save Engines
-    yearly_emissions.to_excel(r'database\rawdata\emissions\icao_cruise_emissions.xlsx')
+    yearly_emissions.to_excel(Path("database/rawdata/emissions/icao_cruise_emissions.xlsx"))
 
 
 

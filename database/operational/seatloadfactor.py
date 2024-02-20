@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from database.tools import dict, plot, T2_preprocessing
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 def calculate(savefig, folder_path):
 
@@ -12,10 +13,10 @@ def calculate(savefig, folder_path):
     airplane_types = pd.DataFrame({'Description': list(airplane_types.keys()), 'Type': list(airplane_types.values())})
 
     #Load Data, T2 is data from the US back to 1990, Historic_Slf contains data from the ICAO worldwide back to 1950
-    T2 = pd.read_csv(r"database\rawdata\USDOT\T_SCHEDULE_T2.csv")
-    AC_types = pd.read_csv(r"database\rawdata\USDOT\L_AIRCRAFT_TYPE (1).csv")
-    historic = pd.read_excel(r"database\rawdata\USDOT\Traffic and Operations 1929-Present_Vollständige D_data.xlsx")
-    growthrates = pd.read_excel(r"database\rawdata\USDOT\growthrates.xlsx")
+    T2 = pd.read_csv(Path("database/rawdata/USDOT/T_SCHEDULE_T2.csv"))
+    AC_types = pd.read_csv(Path("database/rawdata/USDOT/L_AIRCRAFT_TYPE (1).csv"))
+    historic = pd.read_excel(Path("database/rawdata/USDOT/Traffic and Operations 1929-Present_Vollständige D_data.xlsx"))
+    growthrates = pd.read_excel(Path("database/rawdata/USDOT/growthrates.xlsx"))
     historic_slf = historic.dropna(subset='PLF').reset_index()
     historic_rpk = historic.dropna(subset= 'RPKs (mils)').reset_index()
     historic_slf['PLF'] = historic_slf['PLF'].str.replace(',', '.').astype(float)

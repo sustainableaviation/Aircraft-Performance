@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 from database.tools import dict
+from pathlib import Path
 
 def calculate():
 
@@ -12,17 +13,17 @@ def calculate():
     T100 = pd.DataFrame()
 
     # Get a list of all files in the folder and load Databank
-    file_list = os.listdir(r'database\rawdata\USDOT\T100_Annual')
-    aircraft = pd.read_excel(r'Databank.xlsx')
+    file_list = os.listdir(Path("database/rawdata/USDOT/T100_Annual"))
+    aircraft = pd.read_excel(Path("Databank.xlsx"))
 
     # Loop through each file and read it into a dataframe, and append to the combined dataframe
     for file_name in file_list:
-        file_path = os.path.join(r'database\rawdata\USDOT\T100_Annual', file_name)
+        file_path = Path("database/rawdata/USDOT/T100_Annual") / file_name
         df = pd.read_csv(file_path)
         T100 = T100.append(df, ignore_index=True)
 
 
-    AC_types = pd.read_csv(r"database\rawdata\USDOT\L_AIRCRAFT_TYPE (1).csv")
+    AC_types = pd.read_csv(Path("database/rawdata/USDOT/L_AIRCRAFT_TYPE (1).csv"))
 
     # Get Aircraft passenger configuration and commercial aircraft group
     T100 = T100.loc[T100['CARRIER_GROUP'] == 3]
