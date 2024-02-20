@@ -4,6 +4,7 @@ from matplotlib.lines import Line2D
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 import numpy as np
+from pathlib import Path
 
 def calculate(savefig, folder_path):
     # Choose Years for Analysis
@@ -12,7 +13,7 @@ def calculate(savefig, folder_path):
     end_year = 2020
 
     # Code from the Dashboard, Bokeh Properties converted to Matplotlib
-    dashboard = pd.read_excel(r'dashboard\data\Dashboard.xlsx')
+    dashboard = pd.read_excel(Path("dashboard/data/Dashboard.xlsx"))
     ida = dashboard.set_index('YOI')
     ida.loc[1958] = 0
     ida = ida.sort_index()
