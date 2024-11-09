@@ -28,7 +28,7 @@ datestamp = current_date.strftime("%Y-%m-%d")
 warnings.filterwarnings("ignore")
 
 # Create output folder with today's date and save graphs here
-base_folder = r'database\graphs'
+base_folder = r'database/graphs'
 folder_path = os.path.join(base_folder, datestamp)
 if not os.path.exists(folder_path):
     os.makedirs(folder_path)
@@ -85,6 +85,6 @@ print(' --> [INDEX DECOMPOSITION ANALYSIS]: LMDI for Technical and Operational S
 database.index_decomposition.technooperational.calculate(savefig, folder_path)
 print(' --> [INDEX DECOMPOSITION ANALYSIS]: Create Waterfall Charts')
 database.index_decomposition.waterfall_charts.calculate(savefig, folder_path)
-print(' --> [PREPARE DASHBOARD]: Create Future Scenarios and Model Fleet Integration')
-database.dashboard_prep.future_scen.calculate(limit_tsfc, limit_aero, savefig, folder_path)
+# print(' --> [PREPARE DASHBOARD]: Create Future Scenarios and Model Fleet Integration')
+# database.dashboard_prep.future_scen.calculate(limit_tsfc, limit_aero, savefig, folder_path)
 print(' --> [FINISH]')

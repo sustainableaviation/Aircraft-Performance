@@ -1,4 +1,5 @@
 database/graphs/
+dashboard/data/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -83,3 +84,6 @@ target/
 # IPython
 profile_default/
 ipython_config.py
+
+# macOS
+.DS_Store
