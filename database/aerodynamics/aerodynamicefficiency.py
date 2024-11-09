@@ -5,20 +5,66 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+
+def calculate_aerodynamic_efficiency(
+    path_excel_aircraft_data_payload_range: Path,
+    beta_widebody: float = 0.04,
+    beta_narrowbody: float = 0.06,
+) -> pd.DataFrame:
+    """_summary_
+
+    .. image:: https://upload.wikimedia.org/wikipedia/commons/0/04/Payload_Range_Diagram_Airbus_A350-900.svg
+
+    Parameters
+    ----------
+    path_excel_aircraft_data_payload_range : Path
+        _description_
+    beta_widebody : float, optional
+        _description_, by default 0.96
+    beta_narrowbody : float, optional
+        _description_, by default 0.88
+
+    Returns
+    -------
+    pd.DataFrame
+        _description_
+    """
+    
+    df_payload_range = pd.read_excel(
+        io=path_excel_aircraft_data_payload_range,
+        sheet_name='Data',
+        engine='openpyxl',
+    )
+
+    list_regional_aircraft = [
+        'RJ-200ER /RJ-440',
+        'RJ-700',
+        'Embraer ERJ-175',
+        'Embraer-145',
+        'Embraer-135',
+        'Embraer 190'
+    ]
+    df_payload_range = df_payload_range[~df_payload_range['Name'].isin(list_regional_aircraft)]
+
+    df_payload_range
+
 def calculate(savefig, air_density,flight_vel, g, folder_path):
 
     # Load Data
     aircraft_data = pd.read_excel(Path("Databank.xlsx"))
-    lift_data = pd.read_excel(Path("database/rawdata/aircraftproperties/Aicrraft Range Data Extraction.xlsx"), sheet_name='2. Table')
+    # lift_data = pd.read_excel(Path("database/rawdata/aircraftproperties/Aicrraft Range Data Extraction.xlsx"), sheet_name='2. Table')
 
     # Remove these Regional jets, it seems, that their data is not accurate, possibly because overall all values are much smaller.
-    lift_data = lift_data[~lift_data['Name'].isin(['RJ-200ER /RJ-440', 'RJ-700', 'Embraer ERJ-175', 'Embraer-145', 'Embraer-135', 'Embraer 190'])]
+    # lift_data = lift_data[~lift_data['Name'].isin([
     breguet = aircraft_data.merge(lift_data, on='Name', how='left')
 
     # Factor Beta which accounts for the weight fraction burnt in non cruise phase and reserve fuel
-    beta = lambda x: 0.96 if x == 'Wide' else(0.94 if x =='Narrow' else 0.88)
+    # beta = lambda x: 0.96 if x == 'Wide' else(0.94 if x =='Narrow' else 0.88)
 
     # Calculate Range Paramer K at point B and C
+
+    def calculate_():
+
     breguet['Factor'] = breguet['Type'].apply(beta)
     breguet['Ratio 1']= breguet['Factor']*breguet["MTOW\n(Kg)"]/breguet['MZFW_POINT_1\n(Kg)']
     breguet['Ratio 2']= breguet['Factor']*breguet["MTOW\n(Kg)"]/breguet['MZFW_POINT_2\n(Kg)']
@@ -38,6 +84,7 @@ def calculate(savefig, air_density,flight_vel, g, folder_path):
     # Calculate L /D, important only K_1 (Point B) is considered
     breguet['A'] = breguet['K_1']*g*0.001*breguet['TSFC Cruise']
     breguet['L/D estimate'] = breguet['A']/flight_vel
+
     comet4_A = breguet.loc[breguet['Name'] == 'Comet 4', 'A']
     comet1_A = breguet.loc[breguet['Name'] == 'Comet 1', 'A']
     breguet.loc[breguet['Name'] == 'Comet 4', 'L/D estimate'] = comet4_A/223.6 # account for lower speed of the Comet 4

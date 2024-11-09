@@ -44,10 +44,10 @@ heatingvalue_gallon = 142.2  # 142.2 MJ per Gallon of kerosene
 heatingvalue_kg = 43.1  # MJ/kg
 gravity = 9.81  # m/s^2
 
-# DONE
-print(' --> [START]')
-print(' --> [CREATE AIRCRAFT DATABASE]: Calculate Atmospheric Conditions...')
-air_density, flight_vel, temp = database.tools.atmosphere.calculate(altitude, mach)
+# COMPLETE
+# print(' --> [START]')
+# print(' --> [CREATE AIRCRAFT DATABASE]: Calculate Atmospheric Conditions...')
+# air_density, flight_vel, temp = database.tools.atmosphere.calculate(altitude, mach)
 
 
 print(' --> [CREATE AIRCRAFT DATABASE]: Calculate Airtime Efficiency...')
@@ -55,15 +55,17 @@ database.operational.airtimeefficiency.calculate(flight_vel, savefig, folder_pat
 print(' --> [CREATE AIRCRAFT DATABASE]: Load Demand Data from the US DOT...')
 database.overall.overallefficiency.calculate(savefig, km, heatingvalue_gallon, folder_path)
 
-# DONE
-print(' --> [CREATE AIRCRAFT DATABASE]: Calibrate Linear Fit for Take-Off vs Cruise TSFC...')
-linear_fit = database.emissions.to_vs_cruise_sfc.calibrate(savefig, folder_path)
-print(' --> [CREATE AIRCRAFT DATABASE]: Scale Take-Off TFSC from ICAO emissions Databank to Cruise TSFC ...')
-database.emissions.icaoemssions.calculate(linear_fit)
+# COMPLETE
+# print(' --> [CREATE AIRCRAFT DATABASE]: Calibrate Linear Fit for Take-Off vs Cruise TSFC...')
+# linear_fit = database.emissions.to_vs_cruise_sfc.calibrate(savefig, folder_path)
+# print(' --> [CREATE AIRCRAFT DATABASE]: Scale Take-Off TFSC from ICAO emissions Databank to Cruise TSFC ...')
+# database.emissions.icaoemssions.calculate(linear_fit)
 
 # ONGOING
 print(' --> [CREATE AIRCRAFT DATABASE]: Add all Aircraft-Engine Combinations and its Parameters ...')
 limit_tsfc = database.overall.aircraft_engine_configurations.calculate(heatingvalue_kg, air_density, flight_vel, savefig, folder_path)
+
+
 print(' --> [CREATE AIRCRAFT DATABASE]: Create Graphs for Engine Statistics ...')
 database.emissions.engine_statistics.calculate(savefig, folder_path)
 
@@ -73,8 +75,12 @@ print(' --> [CREATE AIRCRAFT DATABASE]: Calculate Structural Efficiency...')
 database.structural.structuralefficiency.calculate(savefig, folder_path)
 print(' --> [CREATE ANNUAL VALUES]: Calculate Seat Load Factor and Airborne Efficiency ...')
 database.operational.seatloadfactor.calculate(savefig, folder_path)
+
+# ONGOING
 print(' --> [CREATE AIRCRAFT DATABASE]: Calculate L/D Ratio from Breguet Range Equation...')
 limit_aero = database.aerodynamics.aerodynamicefficiency.calculate(savefig, air_density, flight_vel, gravity, folder_path)
+
+
 print(' --> [CREATE AIRCRAFT DATABASE]: Split Engine Efficiency into Thermal and Propulsive Efficiency...')
 database.emissions.therm_prop_eff.calculate(savefig, flight_vel, folder_path)
 

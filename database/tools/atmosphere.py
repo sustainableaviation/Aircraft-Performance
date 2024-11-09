@@ -4,22 +4,14 @@ import pint
 
 unit = pint.UnitRegistry()
 
-mach = 0.82 * unit.dimensionless
-altitude = 10500 * unit.m # m
-
 @unit.check(
-    '[length]',
-    '[]', # dimensionless
+    '[length]'
 )
-def calculate_atmospheric_confitions(
-    altitude: float,
-    mach: float
-) -> tuple[float, float, float]:
+def calculate_atmospheric_confitions(altitude: float = 10500 * unit.m) -> tuple[float, float]:
     """
-    Computes the air density and temperature as a function of altitute,
-    and converts aircraft velocity from a mach number to kilometers per hour.
+    Computes the air density and temperature as a function of altitute.
 
-    All calculations are based on the ISA (International Standard Atmosphere).
+    All calculations are based on the ISA (International Standard Atmosphere):
 
     .. image:: https://upload.wikimedia.org/wikipedia/commons/6/62/Comparison_International_Standard_Atmosphere_space_diving.svg
 
@@ -27,8 +19,6 @@ def calculate_atmospheric_confitions(
     ----------
     altitude : float [distance]
         Altitude above sea level
-    mach : float [dimensionless]
-        Mach number
 
     Notes
     -----
@@ -41,7 +31,6 @@ def calculate_atmospheric_confitions(
     --------
     - Temperature: [Eqn. (1.6) in Sadraey (2nd Edition, 2024)](https://doi.org/10.1201/9781003279068)
     - Density: [Section 1.6.2.2 in Sadraey (2nd Edition, 2024)](https://doi.org/10.1201/9781003279068)
-    - Velocity: [Mach Number Calculation](https://en.wikipedia.org/wiki/Mach_number#Calculation)
 
     Returns
     -------
@@ -59,9 +48,39 @@ def calculate_atmospheric_confitions(
     altitute_above_tropopause = max(0.0, altitude.to(unit.m) - 11000.0 * unit.m)
     rho = rho_tropopause * np.exp(-altitute_above_tropopause / 6341.552161)
 
-    # Velocity
+    return rho.to(unit.kg/unit.m ** 3), temperature.to(unit.celsius)
+
+
+@unit.check(
+    '[]', # dimensionless
+    '[temperature]'
+)
+def calculate_aircraft_velocity(
+    mach_number: float,
+    temperature: float
+) -> float:
+    """
+    Converts aircraft speed from mach number to kilometers per hour,
+    depending on the flight altitude air temperature.
+
+    Parameters
+    ----------
+    mach : float [dimensionless]
+        Mach number
+    temperature : float [temperature]
+        Temperature at flight altitute (OAT)
+
+    See Also
+    --------
+    - Velocity: [Mach Number Calculation](https://en.wikipedia.org/wiki/Mach_number#Calculation)
+
+    Returns
+    -------
+    float
+        Aircraft velocity [km/h]
+    """
     R = 287.052874 * (unit.J/(unit.kg*unit.K)) # specific gas constant for air 
     gamma = 1.4 * unit.dimensionless # ratio of specific heat for air
-    velocity = mach * np.sqrt(gamma*R*temperature)
+    velocity = mach_number * np.sqrt(gamma*R*temperature.to(unit.K))
 
-    return rho.to(unit.kg/unit.m ** 3), velocity.to(unit.kph), temperature.to(unit.celsius)
+    return velocity.to(unit.kph)

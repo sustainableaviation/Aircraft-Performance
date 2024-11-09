@@ -5,7 +5,9 @@ import pandas as pd
 import numpy as np
 
 
-def determine_takeoff_to_cruise_tsfc_ratio(path_excel_engine_data_for_calibration: Path) -> float:
+def determine_takeoff_to_cruise_tsfc_ratio(
+    path_excel_engine_data_for_calibration: Path
+) -> tuple[np.polynomial.Polynomial, np.polynomial.Polynomial, float, float]:
     """_summary_
 
     _extended_summary_
@@ -36,7 +38,7 @@ def determine_takeoff_to_cruise_tsfc_ratio(path_excel_engine_data_for_calibratio
     x = df_engines_grouped['TSFC(takeoff) [g/kNs]']
     y = df_engines_grouped['TSFC(cruise) [g/kNs]']
 
-    linear_regression = np.polynomial.Polynomial.fit(
+    linear_fit = np.polynomial.Polynomial.fit(
         x=x,
         y=y,
         deg=1,
@@ -53,35 +55,63 @@ def determine_takeoff_to_cruise_tsfc_ratio(path_excel_engine_data_for_calibratio
         rss = np.sum((y - y_pred)**2)
         return 1 - (rss / tss)
 
-    r_squared_linear = r_squared(y, linear_regression(x))
+    r_squared_linear = r_squared(y, linear_fit(x))
     r_squared_polynomial = r_squared(y, polynomial_fit(x))
 
-    return linear_regression, polynomial_fit, r_squared_linear, r_squared_polynomial
+    return linear_fit, polynomial_fit, r_squared_linear, r_squared_polynomial
 
 
-def calculate(z):
-    # Read Data
-    emissions_df = pd.read_excel(Path("database/rawdata/emissions/edb-emissions-databank_v29 (web).xlsx"), sheet_name='Gaseous Emissions and Smoke')
+# %%
+def scale_engine_data_from_icao_emissions_database(
+    path_excel_engine_data_icao_in: Path,
+    path_excel_engine_data_icao_out: Path,
+    scaling_polynomial: np.polynomial.Polynomial
+) -> None:
+    """_summary_
 
-    # Calculate T/O TSFC
-    emissions_df['TSFC T/O']= emissions_df['Fuel Flow T/O (kg/sec)']/emissions_df['Rated Thrust (kN)']*1000
+    _extended_summary_
 
-    # Get Test Year
-    emissions_df['Final Test Date']= pd.to_datetime(emissions_df['Final Test Date'])
-    emissions_df['Final Test Date']= emissions_df['Final Test Date'].dt.strftime('%Y')
+    Parameters
+    ----------
+    path_excel_engine_data_icao_in : Path
+        _description_
+    path_excel_engine_data_icao_out : Path
+        _description_
+    scaling_polynomial : np.polynomial.Polynomial
+        _description_
+    """
 
-    # Drop Engines for which important Data is unknown
-    yearly_emissions = emissions_df[['Engine Identification','Final Test Date', 'Fuel Flow T/O (kg/sec)', 'B/P Ratio', 'Pressure Ratio', 'Rated Thrust (kN)','TSFC T/O']]
-    yearly_emissions = yearly_emissions.dropna()
+    df_engines = pd.read_excel(
+        io=path_excel_engine_data_icao_in,
+        sheet_name='Gaseous Emissions and Smoke',
+        engine='openpyxl',
+    )
+    df_engines = df_engines[
+        [
+            'Engine Identification',
+            'Final Test Date',
+            'Fuel Flow T/O (kg/sec)',
+            'B/P Ratio',
+            'Pressure Ratio',
+            'Rated Thrust (kN)',
+        ]
+    ]
+    df_engines = df_engines.dropna(how='any')
 
-    # Scale with the Polynomial
-    poly = lambda x: z[0]*x + z[1]
-    yearly_emissions['TSFC Cruise'] = yearly_emissions['TSFC T/O'].apply(poly)
+    # calculate TSFC(takeoff) from fuel flow and rated thrust
+    df_engines['TSFC(takeoff)'] = df_engines['Fuel Flow T/O (kg/sec)'] / df_engines['Rated Thrust (kN)'] * 1000
+    # calculate TSFC(cruise) from polynomial provided by function `determine_takeoff_to_cruise_tsfc_ratio()`
+    df_engines['TSFC(cruise)'] = df_engines['TSFC(takeoff)'].apply(lambda x:scaling_polynomial(x))
 
-    # Save Engines
-    yearly_emissions.to_excel(Path("database/rawdata/emissions/icao_cruise_emissions.xlsx"))
+    df_engines['Final Test Date']= df_engines['Final Test Date'].dt.strftime('%Y')
 
+    df_engines.to_excel(
+        excel_writer=path_excel_engine_data_icao_out,
+        sheet_name='Data',
+        engine='openpyxl',
+    )
 
+    return
 
 
 # %%
