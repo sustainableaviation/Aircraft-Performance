@@ -13,75 +13,75 @@ def calculate(heatingvalue, air_density, flight_vel, savefig, folder_path):
     airplanes = airplanes_dict.keys()
 
     # Get Data from the Aircraft-Database, Normalize and Explode JSON files to get a readable pandas DF
-    models = pd.read_json(Path("database/rawdata/aircraft-database/aircraft-types.json"))
-    models = models.explode('engineModels').reset_index(drop=True)
-    models = models.explode('propertyValues').reset_index(drop=True)
-    manufacturers = pd.read_json(Path("database/rawdata/aircraft-database/manufacturers.json"))
-    manufacturers = manufacturers[['id', 'name']]
-    engines = pd.read_json(Path("database/rawdata/aircraft-database/engine-models.json"))
-    engines = engines.explode('propertyValues').reset_index(drop=True)
-    properties = pd.read_json(Path("database/rawdata/aircraft-database/properties.json"))
-    properties['Value']= properties['name'].astype(str)+','+properties['type'].astype(str)+','+properties['unit'].astype(str)
-    properties = properties[['id', 'Value']]
-    properties_dict = properties.set_index('id')['Value'].to_dict()
-    models_properties = pd.json_normalize(models['propertyValues'])
-    models = models.join(models_properties)
-    all_engines = pd.json_normalize(engines['propertyValues'])
+    # models = pd.read_json(Path("database/rawdata/aircraft-database/aircraft-types.json"))
+    # models = models.explode('engineModels').reset_index(drop=True)
+    # models = models.explode('propertyValues').reset_index(drop=True)
+    # manufacturers = pd.read_json(Path("database/rawdata/aircraft-database/manufacturers.json"))
+    # manufacturers = manufacturers[['id', 'name']]
+    # engines = pd.read_json(Path("database/rawdata/aircraft-database/engine-models.json"))
+    # engines = engines.explode('propertyValues').reset_index(drop=True)
+    # properties = pd.read_json(Path("database/rawdata/aircraft-database/properties.json"))
+    # properties['Value']= properties['name'].astype(str)+','+properties['type'].astype(str)+','+properties['unit'].astype(str)
+    # properties = properties[['id', 'Value']]
+    # properties_dict = properties.set_index('id')['Value'].to_dict()
+    # models_properties = pd.json_normalize(models['propertyValues'])
+    # models = models.join(models_properties)
+    # all_engines = pd.json_normalize(engines['propertyValues'])
 
     # Prepare Engines DF and only keep Turbofan and Turboprop entries
-    engines = pd.concat([engines, all_engines.reindex(engines.index)], axis=1)
-    engines = engines.replace(properties_dict)
-    engines_pivot = engines.pivot(columns='property',values='value')
-    engines = engines.join(engines_pivot)
-    engines = engines.loc[engines['engineFamily'].isin(['turbofan','turboprop'])]
+    # engines = pd.concat([engines, all_engines.reindex(engines.index)], axis=1)
+    # engines = engines.replace(properties_dict)
+    # engines_pivot = engines.pivot(columns='property',values='value')
+    # engines = engines.join(engines_pivot)
+    # engines = engines.loc[engines['engineFamily'].isin(['turbofan','turboprop'])]
     # Only Keep the Following Parameters
-    parameters= ['id',
-                 'engineFamily',
-                 'manufacturer',
-                 'name',
-                 'Dry weight,integer,kilogram',
-                 'Bypass ratio,float,None',
-                 'Compression ratio,float,None',
-                 'Compressor stages,integer,None',
-                 'Cooling system,string,None',
-                 'Fan blades,integer,None',
-                 'Fan diameter,float,metre',
-                 'Max. continuous power,integer,kilowatt',
-                 'Overall pressure ratio,float,None',
-                 'Max. continuous thrust,float,kilonewton']
-    engines = engines[parameters]
-    engines_grouped = engines.groupby(['name', 'id','engineFamily','manufacturer'], as_index=False).mean()
+    #parameters= ['id',
+    #              'engineFamily',
+    #             'manufacturer',
+    #             'name',
+    #             'Dry weight,integer,kilogram',
+    #             'Bypass ratio,float,None',
+    #             'Compression ratio,float,None',
+    #             'Compressor stages,integer,None',
+    #             'Cooling system,string,None',
+    #             'Fan blades,integer,None',
+    #             'Fan diameter,float,metre',
+    #             'Max. continuous power,integer,kilowatt',
+    #             'Overall pressure ratio,float,None',
+    #             'Max. continuous thrust,float,kilonewton']
+    #engines = engines[parameters]
+    #engines_grouped = engines.groupby(['name', 'id','engineFamily','manufacturer'], as_index=False).mean()
 
     # Add Engine Manufacturers
-    engines_grouped = engines_grouped.merge(manufacturers, left_on='manufacturer',right_on='id')
-    engines_grouped = engines_grouped.drop(columns=['id_y','manufacturer'])
+    #engines_grouped = engines_grouped.merge(manufacturers, left_on='manufacturer',right_on='id')
+    #engines_grouped = engines_grouped.drop(columns=['id_y','manufacturer'])
 
     #merge Aircraft with Manufacturers
-    models = models.merge(manufacturers, left_on='manufacturer', right_on='id')
-    models = models.replace(properties_dict)
-    models_pivot = models.pivot(columns='property',values='value')
-    models = models.join(models_pivot)
+    # models = models.merge(manufacturers, left_on='manufacturer', right_on='id')
+    #models = models.replace(properties_dict)
+    #models_pivot = models.pivot(columns='property',values='value')
+    #models = models.join(models_pivot)
 
     # Keep only relevant parameters
-    parameters = ['id_x',
-                  'name_x',
-                  'engineModels',
-                  'name_y',
-                  'engineCount',
-                  'Fuel capacity,integer,litre',
-                  'MLW,integer,kilogram',
-                  'MTOW,integer,kilogram',
-                  'MTW,integer,kilogram',
-                  'MZFW,integer,kilogram',
-                  'Mmo,float,None',
-                  'Maximum operating altitude,integer,foot',
-                  'OEW,integer,kilogram',
-                  'Wing area,float,square-metre',
-                  'Wingspan (canard),float,metre',
-                  'Wingspan (winglets),float,metre',
-                  'Wingspan,float,metre','Height,float,metre']
-    models = models[parameters]
-    models_grouped = models.groupby(['id_x','name_x', 'engineModels','name_y', 'engineCount'], as_index=False).mean()
+    # parameters = ['id_x',
+    #              'name_x',
+    #              'engineModels',
+    #              'name_y',
+    #              'engineCount',
+    #              'Fuel capacity,integer,litre',
+    #              'MLW,integer,kilogram',
+    #              'MTOW,integer,kilogram',
+    #              'MTW,integer,kilogram',
+    #              'MZFW,integer,kilogram',
+    #              'Mmo,float,None',
+    #              'Maximum operating altitude,integer,foot',
+    #              'OEW,integer,kilogram',
+    #              'Wing area,float,square-metre',
+    #              'Wingspan (canard),float,metre',
+    #              'Wingspan (winglets),float,metre',
+    #              'Wingspan,float,metre','Height,float,metre']
+    #models = models[parameters]
+    #models_grouped = models.groupby(['id_x','name_x', 'engineModels','name_y', 'engineCount'], as_index=False).mean()
 
     # Merge Aircraft with Engines to get all Aircraft-Engines Combinations
     models2 = models_grouped.merge(engines_grouped, left_on='engineModels', right_on='id_x')
