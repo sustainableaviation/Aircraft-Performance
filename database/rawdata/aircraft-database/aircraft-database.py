@@ -89,7 +89,7 @@ def read_aircraft_database(
     dict_column_names = {
         'id': '_id_aircraft',
         'engineModels': '_id_engine',
-        'manufacturer': 'Manufacturer',
+        'manufacturer': 'Aircraft Manufacturer',
         'name': 'Aircraft Designation',
         'engineCount': 'Engine Count',
         'Fuel Capacity [L]': 'Fuel Capacity [l]',
@@ -120,7 +120,6 @@ def read_aircraft_database(
     
     return df_grouped
 
-# %%
 
 def read_engine_database(
     path_json_engine_database: Path,
@@ -211,7 +210,7 @@ def read_engine_database(
     df_properties_pivot = df_properties.pivot(columns='property', values='value')
 
     df = pd.concat(
-        objs=[
+        objs=[ ew
             df,
             df_properties_pivot
         ],
@@ -222,7 +221,7 @@ def read_engine_database(
         'id': '_id_engine',
         'name': 'Engine Designation',
         'engineFamily': 'Engine Family',
-        'manufacturer': 'Manufacturer',
+        'manufacturer': 'Engine Manufacturer',
         'Bypass Ratio': 'Bypass Ratio',
         'Overall Pressure Ratio': 'Overall Pressure Ratio',
         'Dry Weight [kg]': 'Dry Weight [kg]',
@@ -350,6 +349,4 @@ df_engines = read_engine_database(path_json_engine_models, dict_properties, dict
 
 path_json_aircraft_models = Path('aircraft-types.json')
 df_aircraft = read_aircraft_database(path_json_aircraft_models, dict_properties, dict_manufacturers)
-
-
 # %%
