@@ -210,7 +210,7 @@ def read_engine_database(
     df_properties_pivot = df_properties.pivot(columns='property', values='value')
 
     df = pd.concat(
-        objs=[ ew
+        objs=[
             df,
             df_properties_pivot
         ],

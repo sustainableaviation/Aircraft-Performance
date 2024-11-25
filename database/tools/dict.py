@@ -1,3 +1,5 @@
+# %%
+
 #All aircraft used for the extraction of the T2 Data.
 class AirplaneModels:
     def __init__(self):
@@ -70,8 +72,8 @@ class aircraftdata:
                                       '707-300B':'B707-300',
                                       '717-200':'717-200',
                                       '720B': 'B720-000' ,
-                                      '727-100': '727-100',
-                                      '727-100RE Super 27': '727-100',
+                                      '727-100': 'B727-100',
+                                      '727-100RE Super 27': 'B727-100',
                                       '727-200':'B727-200/231A',
                                       '737-100':'B737-100/200',
                                       '737-200':'B737-100/200',
@@ -280,37 +282,135 @@ class fullname:
         return self.aircraftfullnames
 
 #Map the names from the Babikian input data to the names of the Schedule T2
+# NO TO OUR
 class AircraftNames:
     def __init__(self):
-        self.aircraftnames = {'B707-300':'B707-300',
-                         'B720-000':'B720-000',
-                         'DC9-10':'DC9-10',
-                         'DC9-30':'McDonnell Douglas DC-9-30',
-                         'B727-200/231A':'Boeing 727-200/231A',
-                         'B737-100/200':'Boeing 737-100/200',
-                         'DC9-40':'DC9-40',
-                         'DC10-10': 'McDonnell Douglas DC-10-10',
-                         'B747-200/300':'Boeing 747-200/300',
-                         'B747-100': 'Boeing 747-100',
-                         'DC10-40':'McDonnell Douglas DC-10-40',
-                         'DC10-30':'McDonnell Douglas DC-10-30',
-                         'L1011-1/100/200':'Lockheed L-1011-1/100/200',
-                         'DC9-50':'DC9-50',
-                         'L1011-500':'L1011-500',
-                         'MD80/DC9-80':'McDonnell Douglas DC9 Super 80/MD81/82/83/88',
-                         'B767-200/ER': 'Boeing 767-200/ER/EM',
-                         'A300-600':'Airbus Industrie A300-600/R/CF/RCF',
-                         'B757-200':'Boeing 757-200',
-                         'B737-300':'Boeing 737-300',
-                         'A310-300': 'A310-300',
-                         'B767-300/ER':'Boeing 767-300/300ER',
-                         'A320-100/200': 'Airbus Industrie A320-100/200',
-                         'B737-400':'Boeing 737-400',
-                         'B747-400':'Boeing 747-400',
-                         'MD11':'McDonnell Douglas MD-11',
-                         'B737-500/600':'Boeing 737-500',
-                         'B777': 'Boeing 777-200ER/200LR/233LR',
-                              'B707-100B/300': 'B707-100B/300'}
+        self.aircraftnames = 
+        {
+        #    'B707-300':'B707-300',
+        #    'B720-000':'B720-000',
+        #    'DC9-10':'DC9-10',
+        #    'DC9-30':'McDonnell Douglas DC-9-30',
+        #    'B727-200/231A':'Boeing 727-200/231A',
+        #    'B737-100/200':'Boeing 737-100/200',
+        #    'DC9-40':'DC9-40',
+        #    'DC10-10': 'McDonnell Douglas DC-10-10',
+        #    'B747-200/300':'Boeing 747-200/300',
+        #    'B747-100': 'Boeing 747-100',
+        #    'DC10-40':'McDonnell Douglas DC-10-40',
+        #    'DC10-30':'McDonnell Douglas DC-10-30',
+        #    'L1011-1/100/200':'Lockheed L-1011-1/100/200',
+        #    'DC9-50':'DC9-50',
+        #    'L1011-500':'L1011-500',
+        #    'MD80/DC9-80':'McDonnell Douglas DC9 Super 80/MD81/82/83/88',
+        #    'B767-200/ER': 'Boeing 767-200/ER/EM',
+        #    'A300-600':'Airbus Industrie A300-600/R/CF/RCF',
+        #    'B757-200':'Boeing 757-200',
+        #    'B737-300':'Boeing 737-300',
+        #    'A310-300': 'A310-300',
+        #    'B767-300/ER':'Boeing 767-300/300ER',
+        #    'A320-100/200': 'Airbus Industrie A320-100/200',
+        #    'B737-400':'Boeing 737-400',
+        #    'B747-400':'Boeing 747-400',
+        #    'MD11':'McDonnell Douglas MD-11',
+        #    'B737-500/600':'Boeing 737-500',
+        #    'B777': 'Boeing 777-200ER/200LR/233LR',
+        #    'B707-100B/300': 'B707-100B/300'
+        }
 
     def get_aircraftnames(self):
         return self.aircraftnames
+
+
+class_aircraftfullnames = fullname()
+aircraftfullnames = class_aircraftfullnames.aircraftfullnames
+df_t2 = pd.DataFrame(list(aircraftfullnames.items()), columns=['T2', 'OUR'])
+
+class_aircraftnames = AircraftNames()
+aircraftnames = class_aircraftnames.aircraftnames
+df_babikian_t2 = pd.DataFrame(list(aircraftnames.items()), columns=['Babikian', 'T2'])
+
+df_t2 = pd.merge(
+    left=df_t2,
+    right=df_babikian_t2,
+    left_on='T2',
+    right_on='T2',
+    how='left'
+)
+
+class_aircrafttypes = AirplaneTypes()
+airplanetypes = class_aircrafttypes.types
+df_types = pd.DataFrame(list(airplanetypes.items()), columns=['T2', 'Type'])
+
+df_t2 = pd.merge(
+    left=df_t2,
+    right=df_types,
+    left_on='T2',
+    right_on='T2',
+    how='left'
+)
+
+# YOI
+class_models = AirplaneModels()
+models = class_models.models
+df_yoi = pd.DataFrame(list(models.items()), columns=['T2', 'YOI'])
+
+df_t2 = pd.merge(
+    left=df_t2,
+    right=df_yoi,
+    left_on='T2',
+    right_on='T2',
+    how='left'
+)
+
+# database.com
+class_aircraftdata = aircraftdata()
+aircraftdata = class_aircraftdata.aircraftsfromdatabase
+df_aircraftdata = pd.DataFrame(list(aircraftdata.items()), columns=['aircraft-data.com', 'OUR'])
+df_aircraftdata = df_aircraftdata.groupby('OUR')['aircraft-data.com'].apply(list).reset_index()
+
+#df = pd.merge(
+#    left=df_aircraftdata,
+#    right=df_t2,
+#    left_on='OUR',
+#    right_on='OUR',
+#    how='outer'
+#)
+
+# %%
+
+"""
+| OUR | data_1 | 
+|-----|--------|
+| A   | 1      |
+| B   | 2      |
+
+| OUR | data_2 |
+|-----|--------|
+| A   | 3      |
+| C   | 4      |
+"""
+
+# Example dataframes
+df_data_1 = pd.DataFrame({
+    'OUR': ['A', 'B'],
+    'data_1': [1, 2]
+})
+
+df_data_2 = pd.DataFrame({
+    'OUR': ['A', 'C'],
+    'data_2': [3, 4]
+})
+
+# Merging the dataframes
+df_merged = pd.merge(
+    left=df_data_1,
+    right=df_data_2,
+    left_on='OUR',
+    right_on='OUR',
+    how='left'
+)
+
+df_t2_dc = df_t2[df_t2['OUR'].str.contains("DC", na=False)]
+df_com_dc = df_aircraftdata[df_aircraftdata['OUR'].str.contains("DC", na=False)]
+

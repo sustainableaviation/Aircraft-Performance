@@ -52,8 +52,10 @@ gravity = 9.81  # m/s^2
 
 print(' --> [CREATE AIRCRAFT DATABASE]: Calculate Airtime Efficiency...')
 database.operational.airtimeefficiency.calculate(flight_vel, savefig, folder_path)
+
 print(' --> [CREATE AIRCRAFT DATABASE]: Load Demand Data from the US DOT...')
-database.overall.overallefficiency.calculate(savefig, km, heatingvalue_gallon, folder_path)
+database.overall.overallefficiency.calculate(savefig, km, heatingvalue_gallon, folder_path) # THIS IS WHERE THE DATABANK IS FIRST CREATED!
+
 
 # COMPLETE
 # print(' --> [CREATE AIRCRAFT DATABASE]: Calibrate Linear Fit for Take-Off vs Cruise TSFC...')
@@ -71,6 +73,8 @@ database.emissions.engine_statistics.calculate(savefig, folder_path)
 
 print(' --> [CREATE AIRCRAFT DATABASE]: Add Seats per Aircraft from US DOT ...')
 database.operational.seats.calculate()
+
+# takes MTOW and OEW from Databank.xlsx
 print(' --> [CREATE AIRCRAFT DATABASE]: Calculate Structural Efficiency...')
 database.structural.structuralefficiency.calculate(savefig, folder_path)
 print(' --> [CREATE ANNUAL VALUES]: Calculate Seat Load Factor and Airborne Efficiency ...')
